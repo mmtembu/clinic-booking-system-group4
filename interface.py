@@ -12,9 +12,12 @@ def create_profile():
             email = name + "@student.wethinkcode.co.za"
         with open("config.json","w") as person:
             json.dump({"email":email,"campus":campus},person)
+            return "Profile Created"
     else:
         with open("config.json") as person:
             file1  = json.load(person)
             print('configuration file exists:\n', '~/.config/clinix/config.json')
-            print(file1)
-    return person
+            return file1
+
+
+print(create_profile())
