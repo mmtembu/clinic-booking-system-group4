@@ -6,6 +6,7 @@ import sys
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from interface import create_profile
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -64,6 +65,6 @@ if __name__ == '__main__':
         if sys.argv[1].upper() == 'HELP':
             do_help()
         if sys.argv[1].upper() == 'INIT':
-            main()
+            create_profile()
     elif len(sys.argv) == 1:
         do_help()
