@@ -1,5 +1,6 @@
 from __future__ import print_function
 import datetime
+import time
 import pickle
 import os.path
 import sys
@@ -16,10 +17,42 @@ def main():
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
-    creds = None
+
+    #Gets credentials for the user
+    service = build('calendar', 'v3', credentials=get_credentials('./credentials.json'))
+
+    #calls api service for the student's calendar
+    events = call_api(service)
+
+    #shows all events in the calendar
+    view_calendar_events(events)
+
+
+def view_calendar_events(events):
+    #This has to be view calendar
+    if not events:
+        print('No upcoming events found.')
+    for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        print(start, event['summary'])
+
+
+def call_api(service):
+    # Call the Calendar API
+    now = time.strftime(r'%Y-%m-%dT%H:%M:%SZ')
+    print('Getting the upcoming 10 events')
+    events_result = service.events().list(calendarId='primary',timeZone='Africa/Johannesburg', timeMin=now,
+                                          maxResults=10, singleEvents=True,
+                                          orderBy='startTime').execute()
+    return events_result.get('items', [])
+
+
+def get_credentials(secret_json):
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
+    creds = None
+
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
@@ -29,27 +62,13 @@ def main():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                './credentials.json', SCOPES)
+                secret_json, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
+    return creds
 
-    service = build('calendar', 'v3', credentials=creds)
-
-    # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                          maxResults=10, singleEvents=True,
-                                          orderBy='startTime').execute()
-    events = events_result.get('items', [])
-
-    if not events:
-        print('No upcoming events found.')
-    for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'])
 
 def do_help():
     """Lists all the available commands"""
@@ -57,6 +76,7 @@ def do_help():
   HELP       -   lists all the available commands the booking system provides
   BOOKING    -   allows a student to make a booking to an available slot
   CLINICIANS -   allows the student to view all the available clinicians
+  CLINIX     -   shows coding clinix calendar events
           """)
 
 if __name__ == '__main__':
