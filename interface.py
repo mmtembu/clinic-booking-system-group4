@@ -11,7 +11,7 @@ def create_profile():
             campus = input("Which campus are you from: ")
             email = name + "@student.wethinkcode.co.za"
         with open("config.json","w") as person:
-            json.dump({"email":email,"campus":campus},person)
+            json.dump({"name":name,"email":email,"campus":campus},person)
             return "Profile Created"
     else:
         with open("config.json") as person:
@@ -20,4 +20,12 @@ def create_profile():
             return file1
 
 
-print(create_profile())
+def get_user_info():
+    if os.path.exists("config.json"):
+        with open("config.json") as person:
+            file1  = json.load(person)
+        return True, file1
+    else:
+        return False, "No configurations found"
+
+# print(create_profile())

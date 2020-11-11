@@ -7,7 +7,7 @@ import sys
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-#from interface import create_profile
+from interface import create_profile,  get_user_info
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -51,10 +51,14 @@ def get_credentials(secret_json):
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
+
+    if get_user_info():
+        does_existed,profile = get_user_info()
+        username = profile["name"]
     creds = None
 
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
+    if os.path.exists(f'{username}.pickle'):
+        with open(f'{username}.pickle', 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -65,8 +69,9 @@ def get_credentials(secret_json):
                 secret_json, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
+        with open(f'{username}.pickle', 'wb') as token:
             pickle.dump(creds, token)
+            
     return creds
 
 
@@ -77,6 +82,7 @@ def do_help():
   BOOKING    -   allows a student to make a booking to an available slot
   CLINICIANS -   allows the student to view all the available clinicians
   CLINIX     -   shows coding clinix calendar events
+  START      -   it starts the clinix appointment
           """)
 
 if __name__ == '__main__':
@@ -84,8 +90,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         if sys.argv[1].upper() == 'HELP':
             do_help()
-       # elif sys.argv[1].upper() == 'INIT':
-            #create_profile()
+        elif sys.argv[1].upper() == 'INIT':
+            create_profile()
         elif sys.argv[1].upper() == 'START':
             main()
     elif len(sys.argv) == 1:
