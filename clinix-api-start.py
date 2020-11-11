@@ -4,17 +4,18 @@ import time
 import pickle
 import os.path
 import sys
+import requests
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from interface import create_profile,  get_user_info
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
-def login():
-    get_credentials('./credentials.json')
+# def login():
+#     get_credentials('./credentials.json')
    
 
 def main():
@@ -56,9 +57,14 @@ def get_credentials(secret_json):
     # created automatically when the authorization flow completes for the first
     # time.
 
-    if get_user_info():
-        does_existed,profile = get_user_info()
-        username = profile["name"]
+    username = ''
+    does_existed,profile = get_user_info()
+    print("show me what is happening?",does_existed, profile)
+    if does_existed:
+        username = profile["username"]
+    else:
+        return None
+
     creds = None
 
     if os.path.exists(f'{username}.pickle'):
@@ -72,6 +78,10 @@ def get_credentials(secret_json):
             flow = InstalledAppFlow.from_client_secrets_file(
                 secret_json, SCOPES)
             creds = flow.run_local_server(port=0)
+
+            session = requests.sessions.Session()
+            session['username']  = 'mmtembu'
+
         # Save the credentials for the next run
         with open(f'{username}.pickle', 'wb') as token:
             pickle.dump(creds, token)
@@ -87,6 +97,7 @@ def do_help():
   CLINICIANS -   allows the student to view all the available clinicians
   CLINIX     -   shows coding clinix calendar events
   START      -   it starts the clinix appointment
+  LOGOUT     -   use this command to remove your credentials from current system
           """)
 
 if __name__ == '__main__':
@@ -96,7 +107,7 @@ if __name__ == '__main__':
             do_help()
         elif sys.argv[1].upper() == 'INIT':
             create_profile()
-        elif sys.argv[1].upper() == 'START':
-            main()
+        elif sys.argv[1].upper() == 'LOGIN':
+            main()            
     elif len(sys.argv) == 1:
         do_help()
