@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from cal_setup import get_calendar_service
 from cal_setup import convert_to_RFC_datetime as dt
 
@@ -67,11 +67,11 @@ def create_booking():
        }
    ).execute()
 
-    print("created event")
-    print("id: ", event_result['id'])
-    print("summary: ", event_result['summary'])
-    print("starts at: ", event_result['start']['dateTime'])
-    print("ends at: ", event_result['end']['dateTime'])
+    print("Created event")
+    print("ID: ", event_result['id'])
+    print("Summary: ", event_result['summary'])
+    print("Starts at: ", event_result['start']['dateTime'])
+    print("Ends at: ", event_result['end']['dateTime'])
 
 if __name__ == '__main__':
    create_booking()
