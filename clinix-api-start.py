@@ -79,9 +79,6 @@ def get_credentials(secret_json):
                 secret_json, SCOPES)
             creds = flow.run_local_server(port=0)
 
-            session = requests.sessions.Session()
-            session['username']  = 'mmtembu'
-
         # Save the credentials for the next run
         with open(f'{username}.pickle', 'wb') as token:
             pickle.dump(creds, token)
