@@ -1,6 +1,7 @@
 import sys
 import json
 import os
+import stdiomask
 
 
 username = ''
@@ -17,13 +18,13 @@ def create_profile():
         # username = input("Please enter student username: ")
         campus = input("Which campus are you from: ")
         email = username + "@student.wethinkcode.co.za"
-        pword1 = input("please enter password: ")
-        pword2 = input("please confirm password: ")
+        pword1 = stdiomask.getpass("Please enter password: ")
+        pword2 = stdiomask.getpass("Please confirm password: ")
 
         while pword1 != pword2:
-            print("password don't match : ")
-            pword1 = input("please enter password: ")
-            pword2 = input("please confirm password: ")
+            print("Password doesn't match : ")
+            pword1 = stdiomask.getpass("Please enter password: ")
+            pword2 = stdiomask.getpass("Please confirm password: ")
             
         with open(f"{username}.json","w") as person:
             json.dump({"username":username,"email":email,"campus":campus, "password": password_hasher(pword1, pword2)},person)
@@ -59,7 +60,8 @@ def get_user_info():
     if os.path.exists(f"{username}.json"):
         with open(f"{username}.json", "r") as person:
             person_info = json.loads(person.read())
-            if password_validator(input('Please enter password to login '), person_info["password"]):
+            print("Please enter password to login ")
+            if password_validator(stdiomask.getpass("Please enter password to login: "), person_info["password"]):
                 if os.path.exists(f'{username}.pickle'):
                     print("Token expiry: ")
                     return True, person_info
@@ -71,3 +73,4 @@ def get_user_info():
         print("Use 'clinix init'")
         exit()
 # print(create_profile())
+
