@@ -30,8 +30,6 @@ def fetch_calendar_events(events, agent):
         for event in events:
             start = event['start'].get('dateTime', event['start'].get('date'))
             end = event['end'].get('dateTime', event['start'].get('date'))
-            print(event['creator'])
-            print(event['attendees'])
             date = start.split('T')[0]
             time = f"{start.split('T')[1].split('+')[0]} - {end.split('T')[1].split('+')[0]}"
 

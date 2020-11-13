@@ -60,10 +60,10 @@ def get_user_info():
     if os.path.exists(f"{username}.json"):
         with open(f"{username}.json", "r") as person:
             person_info = json.loads(person.read())
-            print("Please enter password to login ")
+            # print("Please enter password to login ")
             if password_validator(stdiomask.getpass("Please enter password to login: "), person_info["password"]):
                 if os.path.exists(f'{username}.pickle'):
-                    print("Token expiry: ")
+                    # print("Token expiry: ")
                     return True, person_info
                 else:
                     return True, person_info
