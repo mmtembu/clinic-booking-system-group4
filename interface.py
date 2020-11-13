@@ -44,7 +44,7 @@ def password_hasher(pword1, pword2):
 
 def password_validator(pword1, file1):
     """
-    This funtion vaildates the pasword
+    This funtion vaildates the password
     """
     input_pass = password_hasher(pword1, pword1)
     return input_pass == file1
