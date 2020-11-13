@@ -21,18 +21,17 @@ def fetch_calendar_events(events, agent):
     # if not events:
     #     print(f'No upcoming events found for {agent}.')
     # else:
-        # print('DATE          |    TIME        |    DESCRIPTION')
-        # print('________________________________________________')
+    # print('DATE          |    TIME        |    DESCRIPTION')
+    # print('________________________________________________')
     with open(f'{agent}.csv', 'w') as calendar:
         line = csv.writer(calendar, delimiter='\t',
-                        quoting=csv.QUOTE_NONE, escapechar='\t')
+                          quoting=csv.QUOTE_NONE, escapechar='\t')
         line.writerow(['DATE', '\tTIME', '\t\tDESCRIPTION'])
         for event in events:
             start = event['start'].get('dateTime', event['start'].get('date'))
             end = event['end'].get('dateTime', event['start'].get('date'))
             date = start.split('T')[0]
             time = f"{start.split('T')[1].split('+')[0]} - {end.split('T')[1].split('+')[0]}"
-
 
             # print(date, "   |   ", time, "   |   ", event['summary'])
             line.writerow([date+"   ", time+"   ", event['summary']])
@@ -45,23 +44,25 @@ def read_data(agent):
             csv_reader = (csv.DictReader(file))
 
             list = \
-            [{"Date": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
-            .split('\t')[0].strip(),
-            "Time": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
-            .split('\t')[1].strip(),
-            "Description": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
-            .split('\t')[2].strip()} for row in csv_reader]
-            
+                [{"Date": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                  .split('\t')[0].strip(),
+                  "Time": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                  .split('\t')[1].strip(),
+                  "Description": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                  .split('\t')[2].strip()} for row in csv_reader]
+
             if len(list) != 0:
                 print(f'Getting the upcoming for the next 7 day [{agent}]\n')
                 print('DATE          |            TIME           |    DESCRIPTION')
                 print('_____________________________________________________________')
-                
-                [print(item['Date'], "   |   ", item['Time'],"   |   ", item['Description'])for item in list]
+
+                [print(item['Date'], "   |   ", item['Time'],
+                       "   |   ", item['Description'])for item in list]
             else:
                 print(f'No upcoming events found for {agent}.')
     else:
         print('User not logged in')
+
 
 def call_api(service, cID, agent):
 
@@ -74,7 +75,8 @@ def call_api(service, cID, agent):
     minutes = datetime.today().strftime('%M')
     secs = datetime.today().strftime('%SZ')
     end = f"{year}-{month}-{day}T{hour}:{minutes}:{secs}"
-    events_result = service.events().list(calendarId=cID, timeZone='Africa/Johannesburg', timeMin=now, timeMax = end,singleEvents=True,orderBy='startTime').execute()
+    events_result = service.events().list(calendarId=cID, timeZone='Africa/Johannesburg',
+                                          timeMin=now, timeMax=end, singleEvents=True, orderBy='startTime').execute()
     return events_result.get('items', [])
 
 
@@ -84,7 +86,7 @@ def get_credentials(secret_json):
     # time.
 
     username = ''
-    does_existed,profile = get_user_info()
+    does_existed, profile = get_user_info()
     if does_existed:
         username = profile["username"]
     else:
@@ -117,8 +119,9 @@ def get_calendars():
 
     secret_json = './credentials.json'
     # clinix =  'c_hhfm5kgrq1708jemoqc73941pg@group.calendar.google.com'
-    clinix =  'codeclinix@gmail.com'
+    clinix = 'codeclinix@gmail.com'
     user_calendar = "primary"
     service = build('calendar', 'v3', credentials=get_credentials(secret_json))
     fetch_calendar_events(call_api(service, clinix, 'clinix'), 'clinix')
-    fetch_calendar_events(call_api(service ,user_calendar, 'student'), 'student')
+    fetch_calendar_events(
+        call_api(service, user_calendar, 'student'), 'student')

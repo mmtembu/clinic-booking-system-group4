@@ -6,6 +6,7 @@ import stdiomask
 
 username = ''
 
+
 def create_profile():
     """
     This funtion creates the users config file if one doesnt exist and 
@@ -14,7 +15,7 @@ def create_profile():
     global username
     username = input("Please enter student username: ")
     while not os.path.exists(f"{username}.json"):
-    # while username == '':
+        # while username == '':
         # username = input("Please enter student username: ")
         campus = input("Which campus are you from: ")
         email = username + "@student.wethinkcode.co.za"
@@ -25,14 +26,16 @@ def create_profile():
             print("Password doesn't match : ")
             pword1 = stdiomask.getpass("Please enter password: ")
             pword2 = stdiomask.getpass("Please confirm password: ")
-            
-        with open(f"{username}.json","w") as person:
-            json.dump({"username":username,"email":email,"campus":campus, "password": password_hasher(pword1, pword2)},person)
+
+        with open(f"{username}.json", "w") as person:
+            json.dump({"username": username, "email": email, "campus": campus,
+                       "password": password_hasher(pword1, pword2)}, person)
             return "Profile Created"
     else:
-        with open(f"{username}.json","r") as person:
-            file1  = json.load(person)
-            print('configuration file exists:\n', '~/.config/clinix/config.json')
+        with open(f"{username}.json", "r") as person:
+            file1 = json.load(person)
+            print('configuration file exists:\n',
+                  '~/.config/clinix/config.json')
             return file1
 
 
@@ -50,10 +53,13 @@ def password_validator(pword1, file1):
     input_pass = password_hasher(pword1, pword1)
     return input_pass == file1
 
+
 "TODO check pickle's expiry"
+
+
 def get_user_info():
     """
-    
+
     """
     global username
     username = input("Please enter student username: ")
@@ -68,9 +74,10 @@ def get_user_info():
                 else:
                     return True, person_info
             else:
-                return False, "Incorrect password"
+                print("Incorrect password")
+                exit()
+                # return False, "Incorrect password"
     else:
         print("Use 'clinix init'")
         exit()
 # print(create_profile())
-
