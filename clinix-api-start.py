@@ -23,6 +23,7 @@ def do_help():
     """Lists all the available commands"""
     print("""
 HELP          -   lists all the available commands the booking system provides
+INIT          -   initializes the user to be able to use the clinix calendar
 LOGIN         -   initializes the clinix calendar
 LOGOUT        -   use this command to remove your credentials from current
                   system
