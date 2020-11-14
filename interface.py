@@ -1,79 +1,104 @@
 import sys
 import json
 import os
-import pickle
+import stdiomask
+import hashlib
+import uuid
 
+# username = ''
+is_logged_in = False
 
-username = ''
 
 def create_profile():
     """
     This funtion creates the users config file if one doesnt exist and 
     file path if one exist
     """
-    global username
+    # global username
     username = input("Please enter student username: ")
     while not os.path.exists(f"{username}.json"):
-    # while username == '':
+        # while username == '':
         # username = input("Please enter student username: ")
         campus = input("Which campus are you from: ")
         email = username + "@student.wethinkcode.co.za"
-        pword1 = input("please enter password: ")
-        pword2 = input("please confirm password: ")
+        pword1 = stdiomask.getpass("Please enter password: ")
+        pword2 = stdiomask.getpass("Please confirm password: ")
 
         while pword1 != pword2:
-            print("password don't match : ")
-            pword1 = input("please enter password: ")
-            pword2 = input("please confirm password: ")
-        
+            print("Password doesn't match : ")
+            pword1 = stdiomask.getpass("Please enter password: ")
+            pword2 = stdiomask.getpass("Please confirm password: ")
 
-        #creates pickle for user
-        with open('.config.pickle', 'wb') as dbfile:
-            pickle.dump({'username':username, 'campus':campus}, dbfile)
-
-        with open(f"{username}.json","w") as person:
-            json.dump({"username":username,"email":email,"campus":campus, "password": password_hasher(pword1, pword2)},person)
-            return "Profile Created"
+        with open(f"{username}.json", "w") as person:
+            json.dump({"username": username, "email": email, "campus": campus,
+                       "password": password_hasher(pword1, pword2)}, person)
+            print("Now you can login")
     else:
-        with open(f"{username}.json","r") as person:
-            file1  = json.load(person)
-            print('configuration file exists:\n', '~/.config/clinix/config.json')
+        with open(f"{username}.json", "r") as person:
+            file1 = json.load(person)
+            print('configuration file exists:\n',
+                  f'{username}.json')
             return file1
+
+
+def logout():
+
+    try:
+        username = input("Please enter Username you want to logout: ")
+        if os.path.exists(f'{username}.pickle'):
+            os.remove(f'{username}.pickle')
+            os.remove(f'{username}.json')
+            os.remove(f'student.csv')
+            os.remove(f'clinix.csv')
+            print(f'{username} successfully removed from system')
+        else:
+            print('No user found')
+    except Exception as error:
+        print('Error:', error)
 
 
 def password_hasher(pword1, pword2):
     """
     This function will encrypt the password
     """
-    return pword1
+    # salt = uuid.uuid4().hex
+    return hashlib.sha512(pword1.encode('utf-8')).hexdigest()
 
 
 def password_validator(pword1, file1):
     """
-    This function vaildates the password
+    This funtion vaildates the password
     """
     input_pass = password_hasher(pword1, pword1)
     return input_pass == file1
 
+
 "TODO check pickle's expiry"
+
+
 def get_user_info():
     """
-    
+
     """
-    if os.path.exists('.config.pickle'):
-        with open('.config.pickle', 'rb') as user_config:
-            db = pickle.load(user_config)
-            username = db['username']
+    global is_logged_in
+    # global username
+    username = input("Please enter student username: ")
+    if os.path.exists(f"{username}.json"):
         with open(f"{username}.json", "r") as person:
             person_info = json.loads(person.read())
-            if password_validator(input('Please enter password to login '), person_info["password"]):
+            # print("Please enter password to login ")
+            if password_validator(stdiomask.getpass("Please enter password to login: "), person_info["password"]):
+                is_logged_in = True
                 if os.path.exists(f'{username}.pickle'):
-                    print("Token expiry: ")
+                    # print("Token expiry: ")
                     return True, person_info
                 else:
                     return True, person_info
+
             else:
-                return False, "Incorrect password"
+                print("Incorrect password")
+                exit()
+                # return False, "Incorrect password"
     else:
         print("Use 'clinix init'")
         exit()
