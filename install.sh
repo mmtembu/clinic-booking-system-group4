@@ -41,6 +41,7 @@ if cp -f ~/Downloads/quickstart/* ~/.config/clinix/; then #change from 'cp' -> '
 
 	echo 'Relevant files have been moved.'
 	echo 'source ~/.config/clinix/clinix.sh' >> ~/.zshrc
+	echo 'source ~/.config/clinix/clinix.sh' >> ~/.bashrc
 	chmod +x ~/.config/clinix/clinix.sh
 else
 	error_function 'Unfortunately the files cannot be moved'

@@ -119,7 +119,8 @@ def get_calendars():
     This funtion gets both the calendars
     """
 
-    secret_json = os.getcwd()+'/.config/clinix/credentials.json'
+    # secret_json = os.getcwd()+'/.config/clinix/credentials.json'
+    secret_json = os.getcwd()+'/credentials.json'
     # clinix =  'c_hhfm5kgrq1708jemoqc73941pg@group.calendar.google.com'
     clinix = 'codeclinix@gmail.com'
     user_calendar = "primary"
