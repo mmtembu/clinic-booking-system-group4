@@ -1,7 +1,7 @@
 
 import sys
 from interface import create_profile,  get_user_info, is_logged_in, logout
-from calendar_sync import get_calendars, get_username, read_data, volunteer_slot, book_slot
+from calendar_sync import get_calendars, read_data, volunteer_slot, book_slot, create_combined_csv
 from make_booking import make_booking2 
 
 
@@ -15,6 +15,7 @@ def main():
     """
 
     get_calendars()
+    #print(get_both_calendars())
     # username = get_username()
     # make_booking2.create_booking(username)
 
@@ -49,6 +50,9 @@ if __name__ == '__main__':
             print('Which calendar do you want?\n1. Your calendar\n2. Clinix Calendar\n3. Volunteer Slot\n')
             num = input('which calendar do you want?[choose number] ')
             print()
+
+            create_combined_csv('student', 'clinix')
+
             while not num.isnumeric() or int(num) > 4 or int(num) < 1:
                 num = input('which calendar do you want?[choose number] ')
             if num == '1':

@@ -133,24 +133,72 @@ def get_calendars():
 
 def volunteer_slot(agent):
     if os.path.exists(f'{agent}.csv'):
-       create_booking(username) 
+        with open(f'{agent}.csv', 'r') as events_list:
+            create_booking(username)
     else:
          print('User not logged in')
 
 def book_slot():
     pass
 
-def get_username():
-    return username
+
+def create_combined_csv(student_events, clinix_events):
+    if os.path.exists(f'{student_events}.csv'):
+        list_of_slots = []
+        with open(f'{student_events}.csv', 'r') as file:
+            student_csv_reader = (csv.DictReader(file))
+
+            list_of_slots = \
+                [{"Date": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                  .split('\t')[0].strip(),
+                  "Time": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                  .split('\t')[1].strip(),
+                  "Description": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                  .split('\t')[2].strip()} for row in student_csv_reader]
+            # print("list of lists for student", list_of_slots)
+
+        with open(f'{clinix_events}.csv', 'r') as file:
+            clinix_csv_reader = (csv.DictReader(file))
+
+            list_of_slots_clinix = \
+                [{"Date": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                  .split('\t')[0].strip(),
+                  "Time": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                  .split('\t')[1].strip(),
+                  "Description": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                  .split('\t')[2].strip()} for row in clinix_csv_reader]
+            # print("list of lists for clinix", list_of_slots)
+
+        # print(list_of_slots)
+        # list_of_slots.append(list_of_slots)
+        #result =  [{x['Date'], x['Time'], x['Description']} for x in list_of_slots + list_of_slots}].values()
+        result2 =  [x for x in list_of_slots + list_of_slots_clinix]
+
+        result = sorted(result2, key= lambda i:(i['Date'], i['Time']))
+
+        print(result)
+        # result = {x['id']:x for x in lst1 + lst2}.values()
+        with open('combined_calendar_list.csv', 'w') as calendar:
+            line = csv.writer(calendar, delimiter='\t',
+                            quoting=csv.QUOTE_NONE, escapechar='\t')
+            line.writerow(['DATE', '\tTIME', '\t\tDESCRIPTION'])
+            for item in result:
+                line.writerow([item['Date']+"   ", item['Time']+"   ", item['Description']])
+                
+            
+
+'''def get_username():
+    return username'''
 
 
-def get_both_calendars():
+'''def get_both_calendars():
      # secret_json = os.getcwd()+'/.config/clinix/credentials.json'
     secret_json = os.getcwd()+'/credentials.json'
     # clinix =  'c_hhfm5kgrq1708jemoqc73941pg@group.calendar.google.com'
     clinix = 'codeclinix@gmail.com'
     user_calendar = "primary"
     service = build('calendar', 'v3', credentials=get_credentials(secret_json))
+
+    
         
-    return fetch_calendar_events(call_api(service, clinix, 'clinix'), 'clinix'), fetch_calendar_events(
-        call_api(service, user_calendar, 'student'), 'student') 
+    return call_api(service, clinix, 'clinix')'''
