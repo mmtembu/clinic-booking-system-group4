@@ -1,9 +1,26 @@
+import sys
+import importlib
 from datetime import datetime, timedelta, time
-from cal_setup import get_calendar_service
-from cal_setup import convert_to_RFC_datetime as dt
+cal_setup =  importlib.import_module('make_booking.cal_setup')
+
+# from cal_setup import get_calendar_service
+# from cal_setup import convert_to_RFC_datetime as dt
+
+calendar_s = sys.path.append("../calendar_sync.py")
+import os
+# from calendar_sync import get_username
+# from importlib import import_module
+# from . import calendar_sync
+# calendar_s = import_module('calendar_sync')
+
+'''filepath = "//goinfre//kkara//problems//Group Project//clinic-booking-system-group4//calendar_sync.py"
+os.path.basename(filepath)
+print(os.path.basename(your_path))'''
 
 available_slots = [(2020,11,10,13,0),(2020,11,10,14,0)]
 hour_adjustment = -2
+# username = calendar_s.get_username()
+
 
 def print_slots():
     """
@@ -43,9 +60,9 @@ def time_end(time):
     new_time = dt(time[0],time[1],time[2],time[3]+ hour_adjustment,time[4] + 30)
     return new_time
 
-def create_booking():
+def create_booking(username):
    
-    service = get_calendar_service()
+    service = cal_setup.get_calendar_service()
 
     print_slots()
     num = slot_input()
@@ -60,8 +77,8 @@ def create_booking():
            "description": 'Patient needs help with: "'+description+'"',
            "start": {"dateTime": start, "timeZone": 'Africa/Johannesburg'},
            "end": {"dateTime": end, "timeZone": 'Africa/Johannesburg'},
-           "attendees": [ {'email': 'kaydenkara@gmail.com'},{'email': 'kkara@student.wethinkcode.co.za'}],
-           "anyoneCanAddSelf": False,
+           "attendees": [{'email': username+'@student.wethinkcode.co.za'}],
+           "anyoneCanAddSelf": True,
            'maxAttendees' : 2,
            "colorId": '2'
        }
@@ -73,5 +90,5 @@ def create_booking():
     print("Starts at: ", event_result['start']['dateTime'])
     print("Ends at: ", event_result['end']['dateTime'])
 
-if __name__ == '__main__':
-   create_booking()
+# if __name__ == '__main__':
+#    create_booking()

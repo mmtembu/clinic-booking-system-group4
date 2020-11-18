@@ -8,15 +8,19 @@ import uuid
 # username = ''
 is_logged_in = False
 
-
+"""
+TODO: Don't forget to account for empty strings when creating a json file
+"""
 def create_profile():
     """
     This funtion creates the users config file if one doesnt exist and 
     file path if one exist
     """
+    
+    file1 = None
     # global username
     username = input("Please enter student username: ")
-    while not os.path.exists(f"{username}.json"):
+    if not os.path.exists(f"{os.getcwd()}/{username}.json"):
         # while username == '':
         # username = input("Please enter student username: ")
         campus = input("Which campus are you from: ")
@@ -34,18 +38,17 @@ def create_profile():
                        "password": password_hasher(pword1, pword2)}, person)
             print("Now you can login")
     else:
-        with open(f"{username}.json", "r") as person:
-            file1 = json.load(person)
-            print('configuration file exists:\n',
-                  f'{username}.json')
-            return file1
+        # with open(f"{username}.json", "r") as person:
+        #     file1 = json.load(person)
+        print('User exists')
+    # return file1
 
 
 def logout():
 
     try:
         username = input("Please enter Username you want to logout: ")
-        if os.path.exists(f'{username}.pickle'):
+        if os.path.exists(f"{os.getcwd()}/{username}.json") or os.path.exists(f'{username}.pickle'):
             os.remove(f'{username}.pickle')
             os.remove(f'{username}.json')
             os.remove(f'student.csv')

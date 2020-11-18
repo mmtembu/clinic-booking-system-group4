@@ -1,7 +1,9 @@
 
 import sys
 from interface import create_profile,  get_user_info, is_logged_in, logout
-from calendar_sync import *
+from calendar_sync import get_calendars, get_username, read_data, volunteer_slot, book_slot
+from make_booking import make_booking2 
+
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -13,6 +15,8 @@ def main():
     """
 
     get_calendars()
+    # username = get_username()
+    # make_booking2.create_booking(username)
 
 #   CLINICIANS    -   allows the student to view all the available clinicians
 #   CLINIX        -   shows coding clinix calendar events
@@ -25,7 +29,7 @@ def do_help():
 HELP          -   lists all the available commands the booking system provides
 LOGIN         -   initializes the clinix calendar
 LOGOUT        -   use this command to remove your credentials from current
-system
+                  system
 VIEW_CALENDAR -   shows list of calendars you can view
 """)
 
@@ -42,17 +46,21 @@ if __name__ == '__main__':
         elif sys.argv[1].upper() == 'LOGOUT':
             logout()
         elif sys.argv[1].upper() == 'VIEW_CALENDAR':
-            print('Which calendar do you want?\n1. Your calendar\n2. Clinix Calendar\n')
+            print('Which calendar do you want?\n1. Your calendar\n2. Clinix Calendar\n3. Volunteer Slot\n')
             num = input('which calendar do you want?[choose number] ')
             print()
-            while not num.isnumeric() or int(num) > 2 or int(num) < 1:
+            while not num.isnumeric() or int(num) > 4 or int(num) < 1:
                 num = input('which calendar do you want?[choose number] ')
             if num == '1':
                 read_data('student')
             elif num == '2':
                 read_data('clinix')
+            elif num == '3':
+                volunteer_slot('clinix')
+            elif num == '4':
+                book_slot('clinix')
             print()
         else:
-            print('Please login')
+            do_help()
     elif len(sys.argv) == 1:
         do_help()

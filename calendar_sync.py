@@ -13,9 +13,11 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from interface import create_profile,  get_user_info
+from make_booking.make_booking2 import create_booking
 
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
+username = ""
 
 
 def fetch_calendar_events(events, agent):
@@ -86,7 +88,7 @@ def get_credentials(secret_json):
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-
+    global username
     username = ''
     does_existed, profile = get_user_info()
     if does_existed:
@@ -128,3 +130,27 @@ def get_calendars():
     fetch_calendar_events(call_api(service, clinix, 'clinix'), 'clinix')
     fetch_calendar_events(
         call_api(service, user_calendar, 'student'), 'student')
+
+def volunteer_slot(agent):
+    if os.path.exists(f'{agent}.csv'):
+       create_booking(username) 
+    else:
+         print('User not logged in')
+
+def book_slot():
+    pass
+
+def get_username():
+    return username
+
+
+def get_both_calendars():
+     # secret_json = os.getcwd()+'/.config/clinix/credentials.json'
+    secret_json = os.getcwd()+'/credentials.json'
+    # clinix =  'c_hhfm5kgrq1708jemoqc73941pg@group.calendar.google.com'
+    clinix = 'codeclinix@gmail.com'
+    user_calendar = "primary"
+    service = build('calendar', 'v3', credentials=get_credentials(secret_json))
+        
+    return fetch_calendar_events(call_api(service, clinix, 'clinix'), 'clinix'), fetch_calendar_events(
+        call_api(service, user_calendar, 'student'), 'student') 
