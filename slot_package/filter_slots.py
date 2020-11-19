@@ -19,19 +19,18 @@ def view_slots(day, file):
     # for diff in ((difflib.unified_diff(str(list_of_times), str(list_of_slots)))):
     #     print(diff)
 
+    # print(list_of_times)
     # print([i['Time'] for i in list_of_times if i['Time'].split('-')[0] not in list_of_slots.values()])
     av_slots = []
     print("Slots")
     for i in list_of_slots:
         for j in list_of_times:
-            if i["Time"].split('-')[0].strip() == j['Time']:
-                continue
-            else:
-                # print(i['Time'].split('-')[0].strip(), j['Time'])
+            if i["Time"].split('-')[0].strip() == j['Time'] and i["Date"] == j['Date']:
                 av_slots.append(j)
-                print(f"{ j['Date'] }  {j['Time']}  Available Slots")
+                list_of_times.pop(list_of_times.index(j))
+    
 
-    # print(f"{av_slots} {av_slots[]} {}")
+    print(*list_of_times, sep='\n')
 
 view_slots('2020-11-19', 'combined_calendar_list')
 
