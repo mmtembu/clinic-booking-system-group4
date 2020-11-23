@@ -142,6 +142,8 @@ def read_data(agent):
             col[6, '16:30:00'] = '----'
             col[6, '17:00:00'] = '----'
 
+            # print("description", item['Description'])
+
             for item in table_slot:
                 if len(item['Time'].split('-')) == 2:
                     time_diff = str(datetime.strptime(
@@ -154,20 +156,17 @@ def read_data(agent):
                     last = datetime.strptime((item['Date'] + ' ' +
                                               item['Time'].split('-')[1].strip()), r'%Y-%m-%d %H:%M:%S')
                     if minutes > 30:
-                        # print(first)
+                        print(first)
                         if agent == 'clinix':
                             block_id = 0
                             for _id_, time in col:
-                                if time == item['Time'].split('-')[0].strip():
+                                if time == str(first).split()[1].strip():
                                     block_id = _id_
-                            # block = ['Clinix Session:',
-                            #          item['Description'],
-                            #          item['Time']
-                            #          ]
+
                             for _id_, time in col:
                                 if block_id == _id_:
-                                    col[_id_,
-                                        time] = item['Description']
+                                    col[_id_, time] = item['Description']
+
                         elif agent == 'student' and 'Clinix' not in item['Description']:
                             while first < last:
                                 for _id_, time in col:
@@ -175,17 +174,20 @@ def read_data(agent):
                                         col[_id_, time] = item['Description']
                                 first += timedelta(hours=0,
                                                    minutes=30, seconds=0)
-
                     else:
-                        print(item['Time'], item['Date'], item['Description'])
                         if agent == 'student':
                             while first < last:
                                 for _id_, time in col:
-                                    if time == item['Time'].split('-')[0].strip():
-                                        # if time == str(first).split()[1].strip():
+                                    # if time == item['Time'].split('-')[0].strip():
+                                    if time == str(first).split()[1].strip():
                                         col[_id_, time] = item['Description']
                                 first += timedelta(hours=0,
                                                    minutes=30, seconds=0)
+                    # else:
+                    #     print("what is in here:", item['Description'])
+                    #     for _id_, time in col:
+                    #         if time == item['Time'].split('-')[0].strip():
+                    #             col[_id_, time] = item['Description']
 
             date = item['Date']
             date = datetime.strptime(date, '%Y-%m-%d').date()
