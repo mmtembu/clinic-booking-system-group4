@@ -4,19 +4,22 @@ import os
 import stdiomask
 import hashlib
 import uuid
+import tempfile
 
 # username = ''
 is_logged_in = False
 
 """
-TODO: Don't forget to account for empty strings when creating a json file
+TODO: Don't forget to account for empty strings when creating a json file and prevent init if someone is logged in
 """
+
+
 def create_profile():
     """
-    This funtion creates the users config file if one doesnt exist and 
+    This funtion creates the users config file if one doesnt exist and
     file path if one exist
     """
-    
+
     file1 = None
     # global username
     username = input("Please enter student username: ")
@@ -53,6 +56,7 @@ def logout():
             os.remove(f'{username}.json')
             os.remove(f'student.csv')
             os.remove(f'clinix.csv')
+            os.remove(f'{os.getcwd()}/TempData/temp.txt')
             print(f'{username} successfully removed from system')
         else:
             print('No user found')
@@ -102,10 +106,21 @@ def get_user_info():
                 is_logged_in = True
                 if os.path.exists(f'{username}.pickle'):
                     # print("Token expiry: ")
+                    '''new_file, filename = tempfile.mkstemp()
+                    print("Printinf TempFile", f'{username}')
+                    os.write(new_file, bytes(username, 'utf-8'))
+                    print(os.read(filename, 500000))
+                    os.read()
+                    os.close(new_file)'''
+                    if os.path.exists(os.getcwd()+"/TempData/temp.txt"):
+                        with open(os.getcwd()+'/TempData/temp.txt', 'r') as temp_file:
+                            print("show me what is this:", temp_file.read())
+                    else:
+                        with open(os.getcwd()+'/TempData/temp.txt', 'w') as temp_file:
+                            temp_file.write(username)
                     return True, person_info
                 else:
                     return True, person_info
-
             else:
                 print("Incorrect password")
                 exit()

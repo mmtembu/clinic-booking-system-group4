@@ -2,7 +2,7 @@
 import sys
 from interface import create_profile,  get_user_info, is_logged_in, logout
 from calendar_sync import get_calendars, read_data, volunteer_slot, book_slot, create_combined_csv
-from make_booking import make_booking2 
+from make_booking import make_booking2
 
 
 # If modifying these scopes, delete the file token.pickle.
@@ -15,7 +15,7 @@ def main():
     """
 
     get_calendars()
-    #print(get_both_calendars())
+    # print(get_both_calendars())
     # username = get_username()
     # make_booking2.create_booking(username)
 
@@ -47,7 +47,8 @@ if __name__ == '__main__':
         elif sys.argv[1].upper() == 'LOGOUT':
             logout()
         elif sys.argv[1].upper() == 'VIEW_CALENDAR':
-            print('Which calendar do you want?\n1. Your calendar\n2. Clinix Calendar\n3. Volunteer Slot\n')
+            print(
+                'Which calendar do you want?\n1. Your calendar\n2. Clinix Calendar\n3. Volunteer Slot\n')
             num = input('which calendar do you want?[choose number] ')
             print()
 
