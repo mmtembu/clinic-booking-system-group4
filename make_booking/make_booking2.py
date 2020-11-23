@@ -1,13 +1,14 @@
+import os
 import sys
 import importlib
 from datetime import datetime, timedelta, time
-cal_setup =  importlib.import_module('make_booking.cal_setup')
+cal_setup = importlib.import_module('make_booking.cal_setup')
 
 # from cal_setup import get_calendar_service
 # from cal_setup import convert_to_RFC_datetime as dt
 
 calendar_s = sys.path.append("../calendar_sync.py")
-import os
+interface_s = sys.path.append("../interface.py")
 # from calendar_sync import get_username
 # from importlib import import_module
 # from . import calendar_sync
@@ -17,7 +18,7 @@ import os
 os.path.basename(filepath)
 print(os.path.basename(your_path))'''
 
-available_slots = [(2020,11,10,13,0),(2020,11,10,14,0)]
+available_slots = [(2020, 11, 10, 13, 0), (2020, 11, 10, 14, 0)]
 hour_adjustment = -2
 # username = calendar_s.get_username()
 
@@ -28,8 +29,8 @@ def print_slots():
     """
     print("Available slots are: ")
     for i in range(len(available_slots)):
-       print(str(i+1)+'. ', end='')
-       print(available_slots[i])
+        print(str(i+1)+'. ', end='')
+        print(available_slots[i])
 
 
 def slot_input():
@@ -38,7 +39,8 @@ def slot_input():
     """
     while True:
         try:
-            chosen_slot = int(input("Please select slot (Insert number only): "))
+            chosen_slot = int(
+                input("Please select slot (Insert number only): "))
             if chosen_slot <= 0:
                 print("Please insert a Positive Integer")
                 continue
@@ -52,37 +54,61 @@ def slot_input():
 
     return chosen_slot - 1
 
-def time_start(time):
-    new_time = dt(time[0],time[1],time[2],time[3] + hour_adjustment,time[4])
+
+def time_start(time, mins):
+    new_time = cal_setup.convert_to_RFC_datetime(time[0], time[1], time[2],
+                                                 time[3] + hour_adjustment, time[4], mins)
     return new_time
 
-def time_end(time):
-    new_time = dt(time[0],time[1],time[2],time[3]+ hour_adjustment,time[4] + 30)
+
+def time_end(time, mins):
+    new_time = cal_setup.convert_to_RFC_datetime(
+        time[0], time[1], time[2], time[3] + hour_adjustment, time[4], mins)
     return new_time
+
+
+def get_date_and_time():
+    date = input('Please enter a day you want to volunteer for? [yyyy-mm-dd] ')
+    time = input('Please enter a time you want to volunteer for? [00:00:00] ')
+    return date, time
+
 
 def create_booking(username):
-   
+
     service = cal_setup.get_calendar_service()
+    day, time = get_date_and_time()
 
-    print_slots()
-    num = slot_input()
-    start_time = available_slots[num]
-    start = time_start(start_time)
-    end = time_end(start_time)
-    description = input("What do you need help with? ")
+    # print("show me format", available_slots[1])
+    # print_slots()
+    # num = slot_input()
+    # start_time = available_slots[num]
 
-    event_result = service.events().insert(calendarId='primary',
-       body={
-           "summary": 'Code Clinics Session',
-           "description": 'Patient needs help with: "'+description+'"',
-           "start": {"dateTime": start, "timeZone": 'Africa/Johannesburg'},
-           "end": {"dateTime": end, "timeZone": 'Africa/Johannesburg'},
-           "attendees": [{'email': username+'@student.wethinkcode.co.za'}],
-           "anyoneCanAddSelf": True,
-           'maxAttendees' : 2,
-           "colorId": '2'
-       }
-   ).execute()
+    start_time = (int(day.split('-')[0]), int(day.split('-')[1]), int(
+        day.split('-')[2]), int(time.split(':')[0]), int(time.split(':')[1]))
+    start = time_start(start_time, 0)
+    end = time_end(start_time, 90)
+    print("show me the start time", start)
+    # description = input("What do you need help with? ")
+    description = input("Which topic do you want to tutor? ")
+
+    username = ''
+    with open(os.getcwd()+'/TempData/temp.txt') as temp_file:
+        username = temp_file.readline()
+
+    username = username.split('\n')[0]
+
+    event_result = service.events().insert(calendarId='codeclinix@gmail.com',
+                                           body={
+                                               "summary": "Clinix session: "+description,
+                                               "description": 'Patient needs help with: "'+description+'"',
+                                               "start": {"dateTime": start, "timeZone": 'Africa/Johannesburg'},
+                                               "end": {"dateTime": end, "timeZone": 'Africa/Johannesburg'},
+                                               "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
+                                               "anyoneCanAddSelf": True,
+                                               'maxAttendees': 2,
+                                               "colorId": '2'
+                                           }
+                                           ).execute()
 
     print("Created event")
     print("ID: ", event_result['id'])
