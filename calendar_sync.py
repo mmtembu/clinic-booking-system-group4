@@ -1,10 +1,6 @@
 from __future__ import print_function
-import datetime
-from datetime import timedelta
-<<<<<<< HEAD
-=======
+from datetime import timedelta, datetime
 import re
->>>>>>> 2190882fbfd5b42af71f6256de087013b76fc7c1
 import time
 import pickle
 import prettytable
@@ -181,20 +177,13 @@ def read_data(agent):
                         if agent == 'student':
                             while first < last:
                                 for _id_, time in col:
-                                    # if time == item['Time'].split('-')[0].strip():
                                     if time == str(first).split()[1].strip():
                                         col[_id_, time] = item['Description']
                                 first += timedelta(hours=0,
                                                    minutes=30, seconds=0)
-                    # else:
-                    #     print("what is in here:", item['Description'])
-                    #     for _id_, time in col:
-                    #         if time == item['Time'].split('-')[0].strip():
-                    #             col[_id_, time] = item['Description']
 
             date = item['Date']
             date = datetime.strptime(date, '%Y-%m-%d').date()
-            # print(date.strftime('%Y-%B-%A'))
             date = date.strftime("%Y-%B-%A-%d")
             day = str(date).split('-')[2]
             day_date = str(date).split('-')[3]
@@ -216,13 +205,9 @@ def view_all_slots(day, list_of_slots):
         r'%H:%M:%S'), "Description": "----"} for x in range(0, 481, 30)]
 
     slots = []
-    # print(list_of_slots)
     for item in list_of_slots:
         if day == item['Date']:
-            # slots.append(
-            #     {"Date": item['Date'],
-            #      "Time": item['Time'].split('-')[0].strip(),
-            #      "Description": item['Description']})
+
             slots.append(
                 {"Date": item['Date'],
                  "Time": item['Time'],
@@ -233,8 +218,6 @@ def view_all_slots(day, list_of_slots):
             if i["Time"].split('-')[0].strip() == j['Time'] and i["Date"] == j['Date']:
                 list_of_times.insert(list_of_times.index(
                     j), {"Date": i['Date'], "Time": i['Time'], "Description": i['Description']})
-                # list_of_times.insert(list_of_times.index(
-                #     j), {"Date": i['Date'], "Time": i['Time'].split('-')[0].strip(), "Description": i['Description']})
                 list_of_times.pop(list_of_times.index(j))
     return list_of_times
 
@@ -242,14 +225,10 @@ def view_all_slots(day, list_of_slots):
 def call_api(service, cID, agent):
 
     # Call the Calendar API
-    now = time.strftime(r'%Y-%m-%dT%H:%M:%SZ')
-    day = int(datetime.today().strftime('%d')) + 7
-    month = datetime.today().strftime('%m')
-    year = datetime.today().strftime('%Y')
-    hour = datetime.today().strftime('%H')
-    minutes = datetime.today().strftime('%M')
-    secs = datetime.today().strftime('%SZ')
-    end = f"{year}-{month}-{day}T{hour}:{minutes}:{secs}"
+    now = datetime.today().strftime(r"%Y-%m-%dT%H:%M:%SZ")
+    end = (datetime.today() + timedelta(days=7)
+           ).strftime(r"%Y-%m-%dT%H:%M:%SZ")
+
     events_result = service.events().list(calendarId=cID, timeZone='Africa/Johannesburg',
                                           timeMin=now, timeMax=end, singleEvents=True, orderBy='startTime').execute()
     return events_result.get('items', [])
@@ -297,7 +276,8 @@ def get_calendars():
 
     # secret_json = os.getcwd()+'/.config/clinix/credentials.json'
     secret_json = os.getcwd()+'/credentials.json'
-    # clinix =  'c_hhfm5kgrq1708jemoqc73941pg@group.calendar.google.com'
+    print("show me secret json", secret_json)
+    # clinix = 'c_hhfm5kgrq1708jemoqc73941pg@group.calendar.google.com'
     clinix = 'codeclinix@gmail.com'
     user_calendar = "primary"
     service = build('calendar', 'v3', credentials=get_credentials(secret_json))

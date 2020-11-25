@@ -78,11 +78,6 @@ def create_booking(username):
     service = cal_setup.get_calendar_service()
     day, time = get_date_and_time()
 
-    # print("show me format", available_slots[1])
-    # print_slots()
-    # num = slot_input()
-    # start_time = available_slots[num]
-
     start_time = (int(day.split('-')[0]), int(day.split('-')[1]), int(
         day.split('-')[2]), int(time.split(':')[0]), int(time.split(':')[1]))
     start = time_start(start_time, 0)
