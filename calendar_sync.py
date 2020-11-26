@@ -137,10 +137,8 @@ def read_data(agent):
             col[3, '11:30:00'] = "\033[1;34m%s\033[0m" % '---------'  # three
             col[3, '12:00:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
             col[3, '12:30:00'] = "\033[1;34m%s\033[0m" % '---------'
-            col[4, '13:00:00'] = "\033[1;34m%s\033[0m" % '---------|'  # four
-            # (base_time + timedelta(minutes=x)).strftime(
+            col[4, '13:00:00'] = "\033[1;34m%s\033[0m" % '---------'  # four
             col[4, '13:30:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
-    #     r'%H:%M:%S')
             col[4, '14:00:00'] = "\033[1;34m%s\033[0m" % '---------'
             col[5, '14:30:00'] = "\033[1;34m%s\033[0m" % '---------'  # five
             col[5, '15:00:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
@@ -148,8 +146,6 @@ def read_data(agent):
             col[6, '16:00:00'] = "\033[1;34m%s\033[0m" % '---------'  # six
             col[6, '16:30:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
             col[6, '17:00:00'] = "\033[1;34m%s\033[0m" % '---------'
-
-            # print("description", item['Description'])
 
             for item in table_slot:
                 if len(item['Time'].split('-')) == 2:
@@ -162,8 +158,7 @@ def read_data(agent):
                                                item['Time'].split('-')[0].strip()), r'%Y-%m-%d %H:%M:%S')
                     last = datetime.strptime((item['Date'] + ' ' +
                                               item['Time'].split('-')[1].strip()), r'%Y-%m-%d %H:%M:%S')
-                    if minutes > 30:
-                        print(first)
+                    if minutes == 30:
                         if agent == 'clinix':
                             block_id = 0
                             for _id_, time in col:
@@ -173,13 +168,13 @@ def read_data(agent):
                             for _id_, time in col:
                                 if block_id == _id_:
                                     item['Description'] = "\033[1;32m%s\033[0m" % item['Description']
-
                                     col[_id_, time] = item['Description']
 
                         elif agent == 'student' and 'Clinix' not in item['Description']:
                             while first < last:
                                 for _id_, time in col:
                                     if time == str(first).split()[1].strip():
+                                        item['Description'] = "\033[1;32m%s\033[0m" % item['Description']
                                         col[_id_, time] = item['Description']
                                 first += timedelta(hours=0,
                                                    minutes=30, seconds=0)
@@ -188,6 +183,7 @@ def read_data(agent):
                             while first < last:
                                 for _id_, time in col:
                                     if time == str(first).split()[1].strip():
+                                        item['Description'] = "\033[1;32m%s\033[0m" % item['Description']
                                         col[_id_, time] = item['Description']
                                 first += timedelta(hours=0,
                                                    minutes=30, seconds=0)
@@ -286,7 +282,7 @@ def get_calendars():
 
     # secret_json = os.getcwd()+'/.config/clinix/credentials.json'
     secret_json = os.getcwd()+'/credentials.json'
-    print("show me secret json", secret_json)
+    # print("show me secret json", secret_json)
     # clinix = 'c_hhfm5kgrq1708jemoqc73941pg@group.calendar.google.com'
     clinix = 'codeclinix@gmail.com'
     user_calendar = "primary"
@@ -351,20 +347,3 @@ def create_combined_csv(student_events, clinix_events):
             for item in result:
                 line.writerow(
                     [item['Date']+"   ", item['Time']+"   ", item['Description']])
-
-
-'''def get_username():
-    return username'''
-
-
-'''def get_both_calendars():
-     # secret_json = os.getcwd()+'/.config/clinix/credentials.json'
-    secret_json = os.getcwd()+'/credentials.json'
-    # clinix =  'c_hhfm5kgrq1708jemoqc73941pg@group.calendar.google.com'
-    clinix = 'codeclinix@gmail.com'
-    user_calendar = "primary"
-    service = build('calendar', 'v3', credentials=get_credentials(secret_json))
-
-
-
-    return call_api(service, clinix, 'clinix')'''

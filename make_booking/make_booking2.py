@@ -9,14 +9,6 @@ cal_setup = importlib.import_module('make_booking.cal_setup')
 
 calendar_s = sys.path.append("../calendar_sync.py")
 interface_s = sys.path.append("../interface.py")
-# from calendar_sync import get_username
-# from importlib import import_module
-# from . import calendar_sync
-# calendar_s = import_module('calendar_sync')
-
-'''filepath = "//goinfre//kkara//problems//Group Project//clinic-booking-system-group4//calendar_sync.py"
-os.path.basename(filepath)
-print(os.path.basename(your_path))'''
 
 available_slots = [(2020, 11, 10, 13, 0), (2020, 11, 10, 14, 0)]
 hour_adjustment = -2
@@ -82,7 +74,6 @@ def create_booking(username):
         day.split('-')[2]), int(time.split(':')[0]), int(time.split(':')[1]))
     start = time_start(start_time, 0)
     end = time_end(start_time, 30)
-    # description = input("What do you need help with? ")
     description = input("Which topic do you want to tutor? ")
 
     username = ''
@@ -91,34 +82,52 @@ def create_booking(username):
 
     username = username.split('\n')[0]
 
-    # list_of_times = [{"Date": day, "Time": (base_time + timedelta(minutes=x)).strftime(
-    #     r'%H:%M:%S'), "Description": "----"} for x in range(0, 481, 30)]
+    first = datetime.strptime(
+        (day+'T'+time), r'%Y-%m-%dT%H:%M:%S')
 
-    # (base_time + timedelta(minutes=x)).strftime(
-    #     r'%H:%M:%S')
-
-    # print('show me the: ', datetime.strptime(
-    #     (day+'T'+time), r'%Y-%m-%dT%H:%M:%S'))
-
-    event_result = service.events().insert(calendarId='codeclinix@gmail.com', body={
+    event_body_one = {
         "summary": "Clinix session: "+description,
         "description": 'Patient needs help with: "'+description+'"',
-        "start": {"dateTime": datetime.strptime(str(first), '%Y-%m-%d %H:%M:%S'), "timeZone": 'Africa/Johannesburg'},
-        "end": {"dateTime": datetime.strptime(str(first + timedelta(hours=0, minutes=30, seconds=0)), '%Y-%m-%d %H:%M:%S'), "timeZone": 'Africa/Johannesburg'},
+        "start": {"dateTime": time_start(start_time, 0), "timeZone": 'Africa/Johannesburg'},
+        "end": {"dateTime": time_end(start_time, 30), "timeZone": 'Africa/Johannesburg'},
         "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
         "anyoneCanAddSelf": True,
         'maxAttendees': 2,
-        "colorId": '2'}).execute()
+        "colorId": '2'}
 
-    first = datetime.strptime(
-        (day+'T'+time), r'%Y-%m-%dT%H:%M:%S')
-    x = 0
-    while x < 90:
-        first += timedelta(hours=0, minutes=30, seconds=0)
-        x += 30
+    event_body_two = {
+        "summary": "Clinix session: "+description,
+        "description": 'Patient needs help with: "'+description+'"',
+        "start": {"dateTime": time_start(start_time, 30), "timeZone": 'Africa/Johannesburg'},
+        "end": {"dateTime": time_end(start_time, 60), "timeZone": 'Africa/Johannesburg'},
+        "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
+        "anyoneCanAddSelf": True,
+        'maxAttendees': 2,
+        "colorId": '2'}
+
+    event_body_three = {
+        "summary": "Clinix session: "+description,
+        "description": 'Patient needs help with: "'+description+'"',
+        "start": {"dateTime": time_start(start_time, 60), "timeZone": 'Africa/Johannesburg'},
+        "end": {"dateTime": time_end(start_time, 90), "timeZone": 'Africa/Johannesburg'},
+        "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
+        "anyoneCanAddSelf": True,
+        'maxAttendees': 2,
+        "colorId": '2'}
+
+    event_result = service.events().insert(
+        calendarId='codeclinix@gmail.com', body=event_body_one).execute()
+    print("Event one ID: ", event_result['id'])
+
+    event_result = service.events().insert(
+        calendarId='codeclinix@gmail.com', body=event_body_two).execute()
+    print("Event two  ID: ", event_result['id'])
+
+    event_result = service.events().insert(
+        calendarId='codeclinix@gmail.com', body=event_body_three).execute()
+    print("Event three ID: ", event_result['id'])
 
     print("Created event")
-    print("ID: ", event_result['id'])
     print("Summary: ", event_result['summary'])
     print("Starts at: ", event_result['start']['dateTime'])
     print("Ends at: ", event_result['end']['dateTime'])
