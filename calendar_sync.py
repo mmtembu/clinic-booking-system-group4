@@ -11,6 +11,7 @@ import csv
 import hashlib
 import uuid
 import difflib
+import textwrap     
 from collections import defaultdict
 from slot_package import filter_slots
 from datetime import datetime
@@ -117,8 +118,8 @@ def read_data(agent):
         time_list = [(base_time + timedelta(minutes=x)).strftime(r'%H:%M:%S')
                      for x in range(0, 511, 30)]
 
-        ptable = prettytable.PrettyTable()
-        ptable.add_column('Time', time_list)
+        # ptable = prettytable.PrettyTable()
+        # ptable.add_column('Time', time_list)
 
         table = []
         for x in range(7):
@@ -128,26 +129,28 @@ def read_data(agent):
             table_slot = view_all_slots(date_from_user,
                                         from_csv_to_dict(agent))
             col = defaultdict(list)
-            col[1, '08:30:00'] = "\033[1;34m%s\033[0m" % '---------'  # one
-            col[1, '09:00:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
-            col[1, '09:30:00'] = "\033[1;34m%s\033[0m" % '---------'
-            col[2, '10:00:00'] = "\033[1;34m%s\033[0m" % '---------'  # two
-            col[2, '10:30:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
-            col[2, '11:00:00'] = "\033[1;34m%s\033[0m" % '---------'
-            col[3, '11:30:00'] = "\033[1;34m%s\033[0m" % '---------'  # three
-            col[3, '12:00:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
-            col[3, '12:30:00'] = "\033[1;34m%s\033[0m" % '---------'
-            col[4, '13:00:00'] = "\033[1;34m%s\033[0m" % '---------'  # four
-            col[4, '13:30:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
-            col[4, '14:00:00'] = "\033[1;34m%s\033[0m" % '---------'
-            col[5, '14:30:00'] = "\033[1;34m%s\033[0m" % '---------'  # five
-            col[5, '15:00:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
-            col[5, '15:30:00'] = "\033[1;34m%s\033[0m" % '---------'
-            col[6, '16:00:00'] = "\033[1;34m%s\033[0m" % '---------'  # six
-            col[6, '16:30:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
-            col[6, '17:00:00'] = "\033[1;34m%s\033[0m" % '---------'
+            col[1, '08:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # one
+            col[1, '09:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[1, '09:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[2, '10:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # two
+            col[2, '10:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[2, '11:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[3, '11:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # three
+            col[3, '12:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[3, '12:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[4, '13:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # four
+            col[4, '13:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[4, '14:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[5, '14:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # five
+            col[5, '15:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[5, '15:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[6, '16:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # six
+            col[6, '16:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[6, '17:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
 
             for item in table_slot:
+                ptable = prettytable.PrettyTable()
+                ptable.add_column('Time', time_list)                
                 if len(item['Time'].split('-')) == 2:
                     time_diff = str(datetime.strptime(
                         item['Time'].split('-')[1].strip(), '%H:%M:%S') - datetime.strptime(
@@ -196,7 +199,9 @@ def read_data(agent):
             day_year = str(date).split('-')[0]
             ptable.add_column(
                 f"{day_date} {str(date).split('-')[2]} {day_year}", [*col.values()])
-        print(ptable)
+            ptable.align[f"{day_date} {str(date).split('-')[2]} {day_year}"] = 'l'
+            print(ptable)
+        # print(ptable)
     else:
         print('Please login')
 
@@ -235,8 +240,7 @@ def call_api(service, cID, agent):
     end = (datetime.today() + timedelta(days=7)
            ).strftime(r"%Y-%m-%dT%H:%M:%SZ")
 
-    events_result = service.events().list(calendarId=cID, timeZone='Africa/Johannesburg',
-                                          timeMin=now, timeMax=end, singleEvents=True, orderBy='startTime').execute()
+    events_result = service.events().list(calendarId=cID, timeZone='Africa/Johannesburg',timeMin=now, timeMax=end, singleEvents=True, orderBy='startTime').execute()
     return events_result.get('items', [])
 
 
