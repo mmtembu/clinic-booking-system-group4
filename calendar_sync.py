@@ -22,6 +22,12 @@ from make_booking.make_booking2 import create_booking
 
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
+# Color
+RED = "\033[1;31m%s\033"  # RED
+GREEN = "\033[1;32m%s\033"  # GREEN
+YELLOW = "\033[1;33m%s\033"  # Yellow
+BLUE = "\033[1;34m%s\033"  # Blue
+NEUTRAL = "\033[0m"  # Reset
 username = ""
 
 
@@ -122,24 +128,26 @@ def read_data(agent):
             table_slot = view_all_slots(date_from_user,
                                         from_csv_to_dict(agent))
             col = defaultdict(list)
-            col[1, '08:30:00'] = '----'  # one
-            col[1, '09:00:00'] = '----'
-            col[1, '09:30:00'] = '----'
-            col[2, '10:00:00'] = '----'  # two
-            col[2, '10:30:00'] = '----'
-            col[2, '11:00:00'] = '----'
-            col[3, '11:30:00'] = '----'  # three
-            col[3, '12:00:00'] = '----'
-            col[3, '12:30:00'] = '----'
-            col[4, '13:00:00'] = '----'  # four
-            col[4, '13:30:00'] = '----'
-            col[4, '14:00:00'] = '----'
-            col[5, '14:30:00'] = '----'  # five
-            col[5, '15:00:00'] = '----'
-            col[5, '15:30:00'] = '----'
-            col[6, '16:00:00'] = '----'  # six
-            col[6, '16:30:00'] = '----'
-            col[6, '17:00:00'] = '----'
+            col[1, '08:30:00'] = "\033[1;34m%s\033[0m" % '---------'  # one
+            col[1, '09:00:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
+            col[1, '09:30:00'] = "\033[1;34m%s\033[0m" % '---------'
+            col[2, '10:00:00'] = "\033[1;34m%s\033[0m" % '---------'  # two
+            col[2, '10:30:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
+            col[2, '11:00:00'] = "\033[1;34m%s\033[0m" % '---------'
+            col[3, '11:30:00'] = "\033[1;34m%s\033[0m" % '---------'  # three
+            col[3, '12:00:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
+            col[3, '12:30:00'] = "\033[1;34m%s\033[0m" % '---------'
+            col[4, '13:00:00'] = "\033[1;34m%s\033[0m" % '---------|'  # four
+            # (base_time + timedelta(minutes=x)).strftime(
+            col[4, '13:30:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
+    #     r'%H:%M:%S')
+            col[4, '14:00:00'] = "\033[1;34m%s\033[0m" % '---------'
+            col[5, '14:30:00'] = "\033[1;34m%s\033[0m" % '---------'  # five
+            col[5, '15:00:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
+            col[5, '15:30:00'] = "\033[1;34m%s\033[0m" % '---------'
+            col[6, '16:00:00'] = "\033[1;34m%s\033[0m" % '---------'  # six
+            col[6, '16:30:00'] = "\033[1;34m%s\033[0m" % '|OPEN-SLOT|'
+            col[6, '17:00:00'] = "\033[1;34m%s\033[0m" % '---------'
 
             # print("description", item['Description'])
 
@@ -164,6 +172,8 @@ def read_data(agent):
 
                             for _id_, time in col:
                                 if block_id == _id_:
+                                    item['Description'] = "\033[1;32m%s\033[0m" % item['Description']
+
                                     col[_id_, time] = item['Description']
 
                         elif agent == 'student' and 'Clinix' not in item['Description']:
