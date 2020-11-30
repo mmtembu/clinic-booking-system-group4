@@ -11,7 +11,7 @@ import csv
 import hashlib
 import uuid
 import difflib
-import textwrap     
+import textwrap
 from collections import defaultdict
 from slot_package import filter_slots
 from datetime import datetime
@@ -45,14 +45,22 @@ def fetch_calendar_events(events, agent):
         with open(f'{agent}.csv', 'w') as calendar:
             line = csv.writer(calendar, delimiter='\t',
                               quoting=csv.QUOTE_NONE, escapechar='\t')
-            line.writerow(['DATE', '\tTIME', '\t\tDESCRIPTION'])
+            if agent == 'clinix':
+                line.writerow(
+                    ['DATE', '\tTIME', '\t\tID', '\t\t\tDESCRIPTION'])
+            else:
+                line.writerow(['DATE', '\tTIME', '\t\tDESCRIPTION'])
             for event in events:
                 start = event['start'].get(
                     'dateTime', event['start'].get('date'))
                 end = event['end'].get('dateTime', event['start'].get('date'))
                 date = start.split('T')[0]
                 time = f"{start.split('T')[1].split('+')[0]} - {end.split('T')[1].split('+')[0]}"
-                line.writerow([date+"   ", time+"   ", event['summary']])
+                if agent == 'clinix':
+                    line.writerow(
+                        [date+"   ", time+"   ", event['id'], "   ", event['summary']])
+                else:
+                    line.writerow([date+"   ", time+"   ", event['summary']])
     else:
         print(f'No updates were made to the {agent} calendar.')
 
@@ -88,12 +96,24 @@ def from_csv_to_dict(agent):
     list = []
     with open(f'{agent}.csv', 'r') as file:
         csv_reader = (csv.DictReader(file))
-        list = [{"Date": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
-                 .split('\t')[0].strip(),
-                 "Time": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
-                 .split('\t')[1].strip(),
-                 "Description": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
-                 .split('\t')[2].strip()} for row in csv_reader]
+
+        if agent == "student":
+            list = [{"Date": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                     .split('\t')[0].strip(),
+                     "Time": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                     .split('\t')[1].strip(),
+                     "Description": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
+                     .split('\t')[2].strip()} for row in csv_reader]
+        elif agent == "clinix":
+            list = [{"Date": row['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION']
+                     .split('\t')[0].strip(),
+                     "Time": row['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION']
+                     .split('\t')[1].strip(),
+                     "ID": row['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION']
+                     .split('\t')[2].strip(),
+                     "Description": row['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION']
+                     .split('\t')[4].strip()} for row in csv_reader]
+
     return list
 
 
@@ -129,28 +149,46 @@ def read_data(agent):
             table_slot = view_all_slots(date_from_user,
                                         from_csv_to_dict(agent))
             col = defaultdict(list)
-            col[1, '08:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # one
-            col[1, '09:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[1, '09:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[2, '10:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # two
-            col[2, '10:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[2, '11:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[3, '11:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # three
-            col[3, '12:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[3, '12:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[4, '13:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # four
-            col[4, '13:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[4, '14:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[5, '14:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # five
-            col[5, '15:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[5, '15:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[6, '16:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')  # six
-            col[6, '16:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
-            col[6, '17:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40,'-')
+            col[1, '08:30:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')  # one
+            col[1, '09:00:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[1, '09:30:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[2, '10:00:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')  # two
+            col[2, '10:30:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[2, '11:00:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[3, '11:30:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')  # three
+            col[3, '12:00:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[3, '12:30:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[4, '13:00:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')  # four
+            col[4, '13:30:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[4, '14:00:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[5, '14:30:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')  # five
+            col[5, '15:00:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[5, '15:30:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[6, '16:00:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')  # six
+            col[6, '16:30:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
+            col[6, '17:00:00'] = ("\033[1;34m%s\033[0m" %
+                                  '---------').center(40, '-')
 
             for item in table_slot:
                 ptable = prettytable.PrettyTable()
-                ptable.add_column('Time', time_list)                
+                ptable.add_column('Time', time_list)
                 if len(item['Time'].split('-')) == 2:
                     time_diff = str(datetime.strptime(
                         item['Time'].split('-')[1].strip(), '%H:%M:%S') - datetime.strptime(
@@ -161,6 +199,7 @@ def read_data(agent):
                                                item['Time'].split('-')[0].strip()), r'%Y-%m-%d %H:%M:%S')
                     last = datetime.strptime((item['Date'] + ' ' +
                                               item['Time'].split('-')[1].strip()), r'%Y-%m-%d %H:%M:%S')
+
                     if minutes == 30:
                         if agent == 'clinix':
                             block_id = 0
@@ -240,7 +279,8 @@ def call_api(service, cID, agent):
     end = (datetime.today() + timedelta(days=7)
            ).strftime(r"%Y-%m-%dT%H:%M:%SZ")
 
-    events_result = service.events().list(calendarId=cID, timeZone='Africa/Johannesburg',timeMin=now, timeMax=end, singleEvents=True, orderBy='startTime').execute()
+    events_result = service.events().list(calendarId=cID, timeZone='Africa/Johannesburg',
+                                          timeMin=now, timeMax=end, singleEvents=True, orderBy='startTime').execute()
     return events_result.get('items', [])
 
 
@@ -322,32 +362,42 @@ def create_combined_csv(student_events, clinix_events):
                               .split('\t')[1].strip(),
                               "Description": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
                               .split('\t')[2].strip()} for row in student_csv_reader]
-            # print("list of lists for student", list_of_slots)
 
         with open(f'{clinix_events}.csv', 'r') as file:
             clinix_csv_reader = (csv.DictReader(file))
 
-            list_of_slots_clinix = [{"Date": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
-                                     .split('\t')[0].strip(),
-                                     "Time": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
-                                     .split('\t')[1].strip(),
-                                     "Description": row['DATE\t\t\tTIME\t\t\t\t\tDESCRIPTION']
-                                     .split('\t')[2].strip()} for row in clinix_csv_reader]
-            # print("list of lists for clinix", list_of_slots)
+            list_of_slots_clinix = [{"Date": row['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split('\t')[0].strip(),
+                                     "Time": row['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split('\t')[1].strip(),
+                                     "ID": row['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split('\t')[2].strip(),
+                                     "Description": row['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split('\t')[4].strip()} for row in clinix_csv_reader]
 
-        # print(list_of_slots)
+        for student_ in list_of_slots:
+            for clinix_ in list_of_slots_clinix:
+                if student_['Time'] == clinix_['Time'] and student_['Description'] == clinix_['Description']:
+                    print("where is this: ", list_of_slots.pop(
+                        list_of_slots.index(student_)))
+
+        print("show me this:", *list_of_slots, sep='\n')
         # list_of_slots.append(list_of_slots)
         # result =  [{x['Date'], x['Time'], x['Description']} for x in list_of_slots + list_of_slots}].values()
         result2 = [x for x in list_of_slots + list_of_slots_clinix]
 
-        result = sorted(result2, key=lambda i: (i['Date'], i['Time']))
+        result = sorted(list(result2), key=lambda i: (i['Date'], i['Time']))
 
-        # print(result)
-        # result = {x['id']:x for x in lst1 + lst2}.values()
         with open('combined_calendar_list.csv', 'w') as calendar:
             line = csv.writer(calendar, delimiter='\t',
                               quoting=csv.QUOTE_NONE, escapechar='\t')
-            line.writerow(['DATE', '\tTIME', '\t\tDESCRIPTION'])
+            # line.writerow(['DATE', '\tTIME', '\t\tDESCRIPTION'])
+            line.writerow(['DATE', '\tTIME', '\t\tID', '\t\t\tDESCRIPTION'])
             for item in result:
-                line.writerow(
-                    [item['Date']+"   ", item['Time']+"   ", item['Description']])
+                error_description = item['Description']
+                error_date = item['Date']
+                error_time = item['Time']
+
+                if item.get('ID', None) == None:
+                    line.writerow([item['Date']+"   ",  item['Time']+"   ",
+                                   "--------------------------"+"   ", item['Description']])
+                else:
+                    line.writerow(
+                        [item['Date']+"   ", item['Time']+"   ", item['ID']+"   ", item['Description']])
+                    # continue
