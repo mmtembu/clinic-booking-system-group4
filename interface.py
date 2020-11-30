@@ -116,6 +116,7 @@ def get_user_info():
                         with open(os.getcwd()+'/TempData/temp.txt', 'r') as temp_file:
                             print("show me what is this:", temp_file.read())
                     else:
+                        print("Here is temp file")
                         with open(os.getcwd()+'/TempData/temp.txt', 'w') as temp_file:
                             temp_file.write(username)
                     return True, person_info

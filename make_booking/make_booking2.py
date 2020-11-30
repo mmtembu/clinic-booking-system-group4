@@ -60,8 +60,29 @@ def time_end(time, mins):
 
 
 def get_date_and_time():
-    date = input('Please enter a day you want to volunteer for? [yyyy-mm-dd] ')
-    time = input('Please enter a time you want to volunteer for? [00:00:00] ')
+    """
+    time = input('Please enter a time you want to volunteer for? [00:00:00] ')	    This is to validate that the correct date and time being entered
+    """
+    while True:
+        date = input('Please enter a day you want to volunteer for? [YYYY-MM-DD] ')
+        try:
+            if date != datetime.strptime(date, "%Y-%m-%d").strftime('%Y-%m-%d'):
+                raise ValueError
+            break
+        except ValueError:
+            print("Please enter a valid date format eg. '2020-11-21' ")
+            continue
+
+    while True:
+        time = input('Please enter a time you want to volunteer for? [Hour:Minute:Second] ')
+        try:
+            if time != datetime.strptime(time, "%H:%M:%S").strftime('%H:%M:%S'):
+                raise ValueError
+            break
+        except ValueError:
+            print("Please enter a valid date format eg. '13:00:00' ")
+            continue
+
     return date, time
 
 
