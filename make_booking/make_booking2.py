@@ -153,5 +153,23 @@ def create_booking(username):
     print("Starts at: ", event_result['start']['dateTime'])
     print("Ends at: ", event_result['end']['dateTime'])
 
+
+    def do_delete()
+    """
+    Used to delete specific volunteer slots on calendar
+    """
+
+    if delete is True:
+        service.events().delete(calendarId, event_result['id']).execute()
+    else:
+        do_help() 
+
+
+def cancel_volunteer_slots(calendarId, event_result)
+    """ Will delete booking for both parties
+    """
+    if create_booking and delete is True:
+        do_delete()
+
 # if __name__ == '__main__':
 #    create_booking()
