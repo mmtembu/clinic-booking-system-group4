@@ -7,13 +7,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 # If modifying these scopes, delete the file token.pickle.
-SCOPES = ['https://www.googleapis.com/auth/calendar.events', 'https://www.googleapis.com/auth/calendar']
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 
-# https://www.googleapis.com/auth/calendar.readonly
-# https://www.googleapis.com/auth/calendar
-# https://www.googleapis.com/auth/calendar.events.readonly
-# https://www.googleapis.com/auth/calendar.events
-CREDENTIALS_FILE = '../secret_json.json'
+CREDENTIALS_FILE = 'credentials.json'
 
 
 def get_calendar_service():

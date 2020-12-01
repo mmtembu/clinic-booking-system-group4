@@ -1,8 +1,9 @@
 import os
 import sys
+import csv
 import importlib
 from datetime import datetime, timedelta, time
-cal_setup = importlib.import_module('make_booking.cal_setup')
+cal_setup = importlib.import_module('create_volunteer.cal_setup')
 
 # from cal_setup import get_calendar_service
 # from cal_setup import convert_to_RFC_datetime as dt
@@ -86,7 +87,7 @@ def get_date_and_time():
     return date, time
 
 
-def create_booking(username):
+def create_volunteer(username):
 
     service = cal_setup.get_calendar_service()
     day, time = get_date_and_time()
@@ -152,6 +153,37 @@ def create_booking(username):
     print("Summary: ", event_result['summary'])
     print("Starts at: ", event_result['start']['dateTime'])
     print("Ends at: ", event_result['end']['dateTime'])
+
+
+def do_delete():
+    """
+    Used to delete specific volunteer slots on calendar
+    """
+    # print("Slot has been canceled")
+    result = sorted(list(result2), key=lambda i: (i['Date'], i['Time']))
+    with open('combined_calendar_list.csv', 'w') as calendar:
+        line = csv.writer(calendar, delimiter='\t',
+                          quoting=csv.QUOTE_NONE, escapechar='\t')
+            # line.writerow(['DATE', '\tTIME', '\t\tDESCRIPTION'])
+        line.writerow(['DATE', '\tTIME', '\t\tID', '\t\t\tDESCRIPTION'])
+        for item in result:
+            error_description = item['Description']
+            error_date = item['Date']
+            error_time = item['Time']
+
+            if item.get('ID', None) == None:
+                line.writerow([item['Date']+"   ",  item['Time']+"   ",
+                               "--------------------------"+"   ", item['Description']])
+
+
+
+    service = cal_setup.get_calendar_service()
+    if create_booking and delete is True:
+        service.events().delete(calendarId, event_result['id']).execute()
+    else:
+        do_help()
+
+
 
 # if __name__ == '__main__':
 #    create_booking()

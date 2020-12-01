@@ -104,21 +104,8 @@ def get_user_info():
             # print("Please enter password to login ")
             if password_validator(stdiomask.getpass("Please enter password to login: "), person_info["password"]):
                 is_logged_in = True
+                create_temp_data(username)
                 if os.path.exists(f'{username}.pickle'):
-                    # print("Token expiry: ")
-                    '''new_file, filename = tempfile.mkstemp()
-                    print("Printinf TempFile", f'{username}')
-                    os.write(new_file, bytes(username, 'utf-8'))
-                    print(os.read(filename, 500000))
-                    os.read()
-                    os.close(new_file)'''
-                    if os.path.exists(os.getcwd()+"/TempData/temp.txt"):
-                        with open(os.getcwd()+'/TempData/temp.txt', 'r') as temp_file:
-                            print("show me what is this:", temp_file.read())
-                    else:
-                        print("Here is temp file")
-                        with open(os.getcwd()+'/TempData/temp.txt', 'w') as temp_file:
-                            temp_file.write(username)
                     return True, person_info
                 else:
                     return True, person_info
@@ -130,3 +117,12 @@ def get_user_info():
         print("Use 'clinix init'")
         exit()
 # print(create_profile())
+
+def create_temp_data(username):
+    if os.path.exists(os.getcwd()+"/TempData/temp.txt"):
+        with open(os.getcwd()+'/TempData/temp.txt', 'r') as temp_file:
+            print("show me what is this:", temp_file.read())
+    else:
+        print("Here is temp file")
+        with open(os.getcwd()+'/TempData/temp.txt', 'w') as temp_file:
+            temp_file.write(username)

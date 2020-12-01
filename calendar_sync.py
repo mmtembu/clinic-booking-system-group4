@@ -19,7 +19,8 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from interface import create_profile,  get_user_info
-from make_booking.make_booking2 import create_booking
+from create_volunteer.create_volunteer_slot import create_volunteer
+from make_booking.make_booking import create_booking
 
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -341,13 +342,19 @@ def volunteer_slot(agent):
         with open(f'{agent}.csv', 'r') as events_list:
             # filter_slots.view_slots(str(datetime.today().date()), '08:30:00', 'combined_calendar_list')
             read_data('clinix')
-            create_booking(username)
+            create_volunteer(username)
     else:
         print('User not logged in')
 
 
-def book_slot():
-    pass
+def book_slot(agent):
+    if os.path.exists(f'{agent}.csv'):
+        with open(f'{agent}.csv', 'r') as events_list:
+            # filter_slots.view_slots(str(datetime.today().date()), '08:30:00', 'combined_calendar_list')
+            read_data('clinix')
+            create_booking()
+    else:
+        print('User not logged in')    
 
 
 def create_combined_csv(student_events, clinix_events):

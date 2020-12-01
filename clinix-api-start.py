@@ -2,8 +2,8 @@
 import sys
 from interface import create_profile,  get_user_info, is_logged_in, logout
 from calendar_sync import get_calendars, read_data, volunteer_slot, book_slot, create_combined_csv
-from make_booking import make_booking2
-
+from create_volunteer import create_volunteer_slot
+from create_volunteer.create_volunteer_slot import do_delete
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -32,6 +32,7 @@ LOGIN         -   initializes the clinix calendar
 LOGOUT        -   use this command to remove your credentials from current
                   system
 VIEW_CALENDAR -   shows list of calendars you can view
+MAKE_BOOKING  -   makes the booking for the patient
 """)
 
 
@@ -46,12 +47,13 @@ if __name__ == '__main__':
             main()
         elif sys.argv[1].upper() == 'LOGOUT':
             logout()
+        elif sys.argv[1].upper() == 'MAKE_BOOKING':
+            book_slot('clinix')
         elif sys.argv[1].upper() == 'VIEW_CALENDAR':
             print(
-                'Which calendar do you want?\n1. Your calendar\n2. Clinix Calendar\n3. Volunteer Slot\n')
+                'Which calendar do you want?\n1. Your calendar\n2. Clinix Calendar\n3. Volunteer Slot\n4. Cancel Volunteer Slot\n')
             num = input('which calendar do you want?[choose number] ')
             print()
-
             create_combined_csv('student', 'clinix')
 
             while not num.isnumeric() or int(num) > 4 or int(num) < 1:
@@ -63,7 +65,8 @@ if __name__ == '__main__':
             elif num == '3':
                 volunteer_slot('clinix')
             elif num == '4':
-                book_slot('clinix')
+                do_delete()
+
             print()
         else:
             do_help()
