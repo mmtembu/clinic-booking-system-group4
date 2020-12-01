@@ -57,7 +57,7 @@ if __name__ == '__main__':
             create_combined_csv('student', 'clinix')
 
             while not num.isnumeric() or int(num) > 4 or int(num) < 1:
-                num = input('which calendar do you want?[choose number] ')
+                num = input('Which calendar do you want?[choose number] ')
             if num == '1':
                 read_data('student')
             elif num == '2':

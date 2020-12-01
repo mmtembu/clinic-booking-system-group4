@@ -1,8 +1,9 @@
-import make_booking.cal_setup
+import time
 import sys
 import json
 import os
 import csv
+import make_booking.cal_setup
 from datetime import datetime
 from datetime import datetime, timedelta
 from make_booking.cal_setup import get_calendar_service
@@ -34,12 +35,32 @@ def get_date_and_time():
 
     return date, time
 
+
+def loading_animation():
+    """
+    Creates an animation while event is being loaded
+    """
+
+    animation = ["[■□□□□□□□□□]","[■■□□□□□□□□]", "[■■■□□□□□□□]", "[■■■■□□□□□□]", "[■■■■■□□□□□]", "[■■■■■■□□□□]", "[■■■■■■■□□□]", "[■■■■■■■■□□]", "[■■■■■■■■■□]", "[■■■■■■■■■■]"]
+
+    for i in range(len(animation)):
+        time.sleep(0.3)
+        sys.stdout.write("\r" + animation[i % len(animation)])
+        sys.stdout.flush()
+
+    print("\n")
+
+
 def create_booking():
+    """
+    function creates a booking on already existing volunteer slots,
+    used by patient to book clinicians
+    """
+
     username = ''
     with open(os.getcwd()+'/TempData/temp.txt') as temp_file:
         username = temp_file.readline()
     username = username.split('\n')[0]
-    # update the event to tomorrow 9 AM IST
     service = get_calendar_service()
     
     data_api_time = []
@@ -54,7 +75,7 @@ def create_booking():
             data_api_time.append((f'{start_date}T{start_time}', event_id))
 
     date_input, time_input = get_date_and_time()
-    # print("show bra show me this:", data_api_time)
+
 
     save_event_id = ''
     for item in data_api_time:
@@ -62,31 +83,31 @@ def create_booking():
             save_event_id = item[1]
             break
 
-    # print("show me the id man:", save_event_id)
+    #gets event details (getting the clinician's emails)
     event_result = service.events().get(
         calendarId='codeclinix@gmail.com',
         eventId=save_event_id,
     ).execute()
 
-    # print(event_result['maxAttendees'])
     attendee_details = event_result['attendees'][0]
     attendee_email = attendee_details.get('email')
-    # print(attendee_email)
+    
 
     event_result = service.events().patch(
           calendarId='codeclinix@gmail.com',
           eventId=save_event_id,
           body={
-           "attendees": [{'email': attendee_email}, {'email': username+'@student.wethinkcode.co.za'}]
+           "attendees": [{'email': attendee_email}, {'email': username+'@student.wethinkcode.co.za'}],
+           'sendNotifications': True
            },
         ).execute()
 
-
-    print("updated event")
-    print("id: ", event_result['id'])
+    print("\n")
+    print("Loading...")
+    loading_animation()
+    print("Booking Successful   (•‿•) ")
+    print("Id: ", event_result['id'])
     print(event_result['summary'])
-    print(event_result['attendees'])
 
 
-if __name__ == '__main__':
-    main()
+

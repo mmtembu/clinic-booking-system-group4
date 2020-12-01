@@ -28,12 +28,12 @@ def create_profile():
         # username = input("Please enter student username: ")
         campus = input("Which campus are you from: ")
         email = username + "@student.wethinkcode.co.za"
-        pword1 = stdiomask.getpass("Please enter password: ")
+        pword1 = stdiomask.getpass("Please create a password: ")
         pword2 = stdiomask.getpass("Please confirm password: ")
 
         while pword1 != pword2:
             print("Password doesn't match : ")
-            pword1 = stdiomask.getpass("Please enter password: ")
+            pword1 = stdiomask.getpass("Please create a password: ")
             pword2 = stdiomask.getpass("Please confirm password: ")
 
         with open(f"{username}.json", "w") as person:
@@ -119,10 +119,12 @@ def get_user_info():
 # print(create_profile())
 
 def create_temp_data(username):
+    """
+    Creates a temporary data file which stores the username of the person logged in
+    """
     if os.path.exists(os.getcwd()+"/TempData/temp.txt"):
         with open(os.getcwd()+'/TempData/temp.txt', 'r') as temp_file:
-            print("show me what is this:", temp_file.read())
+            print("Welcome back,", temp_file.read())
     else:
-        print("Here is temp file")
         with open(os.getcwd()+'/TempData/temp.txt', 'w') as temp_file:
             temp_file.write(username)

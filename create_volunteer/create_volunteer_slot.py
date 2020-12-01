@@ -2,6 +2,7 @@ import os
 import sys
 import csv
 import importlib
+import time as t
 from datetime import datetime, timedelta, time
 cal_setup = importlib.import_module('create_volunteer.cal_setup')
 
@@ -11,41 +12,8 @@ cal_setup = importlib.import_module('create_volunteer.cal_setup')
 calendar_s = sys.path.append("../calendar_sync.py")
 interface_s = sys.path.append("../interface.py")
 
-available_slots = [(2020, 11, 10, 13, 0), (2020, 11, 10, 14, 0)]
+
 hour_adjustment = -2
-# username = calendar_s.get_username()
-
-
-def print_slots():
-    """
-    Prints all available slots
-    """
-    print("Available slots are: ")
-    for i in range(len(available_slots)):
-        print(str(i+1)+'. ', end='')
-        print(available_slots[i])
-
-
-def slot_input():
-    """
-    Takes input for slot, making sure its a valid integer
-    """
-    while True:
-        try:
-            chosen_slot = int(
-                input("Please select slot (Insert number only): "))
-            if chosen_slot <= 0:
-                print("Please insert a Positive Integer")
-                continue
-            try:
-                available_slots[chosen_slot - 1]
-                break
-            except IndexError:
-                print("Please use the numbers shown on the available slots list")
-        except ValueError:
-            print("Please insert a Valid Integer")
-
-    return chosen_slot - 1
 
 
 def time_start(time, mins):
@@ -62,7 +30,7 @@ def time_end(time, mins):
 
 def get_date_and_time():
     """
-    time = input('Please enter a time you want to volunteer for? [00:00:00] ')	    This is to validate that the correct date and time being entered
+    This is to validate that the correct date and time being entered
     """
     while True:
         date = input('Please enter a day you want to volunteer for? [YYYY-MM-DD] ')
@@ -85,6 +53,21 @@ def get_date_and_time():
             continue
 
     return date, time
+
+
+def loading_animation():
+    """
+    Creates an animation while event is being loaded
+    """
+
+    animation = ["[■□□□□□□□□□]","[■■□□□□□□□□]", "[■■■□□□□□□□]", "[■■■■□□□□□□]", "[■■■■■□□□□□]", "[■■■■■■□□□□]", "[■■■■■■■□□□]", "[■■■■■■■■□□]", "[■■■■■■■■■□]", "[■■■■■■■■■■]"]
+
+    for i in range(len(animation)):
+        t.sleep(0.3)
+        sys.stdout.write("\r" + animation[i % len(animation)])
+        sys.stdout.flush()
+
+    print("\n")
 
 
 def create_volunteer(username):
@@ -113,8 +96,10 @@ def create_volunteer(username):
         "start": {"dateTime": time_start(start_time, 0), "timeZone": 'Africa/Johannesburg'},
         "end": {"dateTime": time_end(start_time, 30), "timeZone": 'Africa/Johannesburg'},
         "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
-        "anyoneCanAddSelf": True,
+        "anyoneCanAddSelf": False,
         'maxAttendees': 2,
+        'sendNotifications': True,
+        'sendUpdates': 'all',
         "colorId": '2'}
 
     event_body_two = {
@@ -123,8 +108,10 @@ def create_volunteer(username):
         "start": {"dateTime": time_start(start_time, 30), "timeZone": 'Africa/Johannesburg'},
         "end": {"dateTime": time_end(start_time, 60), "timeZone": 'Africa/Johannesburg'},
         "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
-        "anyoneCanAddSelf": True,
+        "anyoneCanAddSelf": False,
         'maxAttendees': 2,
+        'sendNotifications': True,
+        'sendUpdates': 'all',
         "colorId": '2'}
 
     event_body_three = {
@@ -133,9 +120,15 @@ def create_volunteer(username):
         "start": {"dateTime": time_start(start_time, 60), "timeZone": 'Africa/Johannesburg'},
         "end": {"dateTime": time_end(start_time, 90), "timeZone": 'Africa/Johannesburg'},
         "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
-        "anyoneCanAddSelf": True,
+        "anyoneCanAddSelf": False,
         'maxAttendees': 2,
+        'sendNotifications': True,
+        'sendUpdates': 'all',
         "colorId": '2'}
+
+    print("\n")
+    print("Loading...")
+    loading_animation()
 
     event_result = service.events().insert(
         calendarId='codeclinix@gmail.com', body=event_body_one).execute()
@@ -149,10 +142,9 @@ def create_volunteer(username):
         calendarId='codeclinix@gmail.com', body=event_body_three).execute()
     print("Event three ID: ", event_result['id'])
 
-    print("Created event")
+    print("Slot Created  (•‿•)")
     print("Summary: ", event_result['summary'])
-    print("Starts at: ", event_result['start']['dateTime'])
-    print("Ends at: ", event_result['end']['dateTime'])
+
 
 
 def do_delete():

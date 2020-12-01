@@ -321,14 +321,8 @@ def get_calendars():
     """
     This funtion gets both the calendars
     """
-    # if os.path.exists(os.getcwd()+'/TempData/temp.txt'):
-    #     with open(os.getcwd()+'/TempData/temp.txt', 'a') as temp_file:
-    #         temp_file.append('codeclinix@gmail.com')
 
-    # secret_json = os.getcwd()+'/.config/clinix/credentials.json'
     secret_json = os.getcwd()+'/credentials.json'
-    # print("show me secret json", secret_json)
-    # clinix = 'c_hhfm5kgrq1708jemoqc73941pg@group.calendar.google.com'
     clinix = 'codeclinix@gmail.com'
     user_calendar = "primary"
     service = build('calendar', 'v3', credentials=get_credentials(secret_json))
@@ -340,7 +334,6 @@ def get_calendars():
 def volunteer_slot(agent):
     if os.path.exists(f'{agent}.csv'):
         with open(f'{agent}.csv', 'r') as events_list:
-            # filter_slots.view_slots(str(datetime.today().date()), '08:30:00', 'combined_calendar_list')
             read_data('clinix')
             create_volunteer(username)
     else:
@@ -350,7 +343,6 @@ def volunteer_slot(agent):
 def book_slot(agent):
     if os.path.exists(f'{agent}.csv'):
         with open(f'{agent}.csv', 'r') as events_list:
-            # filter_slots.view_slots(str(datetime.today().date()), '08:30:00', 'combined_calendar_list')
             read_data('clinix')
             create_booking()
     else:
@@ -358,6 +350,9 @@ def book_slot(agent):
 
 
 def create_combined_csv(student_events, clinix_events):
+    """
+    Creates a combined csv file which stores the data of the users personal calendar and the clinix calendar
+    """
     if os.path.exists(f'{student_events}.csv'):
         list_of_slots = []
         with open(f'{student_events}.csv', 'r') as file:
