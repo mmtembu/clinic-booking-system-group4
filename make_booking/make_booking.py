@@ -14,7 +14,8 @@ def get_date_and_time():
     time = input('Please enter a time you want to volunteer for? [00:00:00] ')	    This is to validate that the correct date and time being entered
     """
     while True:
-        date = input('Please enter a day you want to volunteer for? [YYYY-MM-DD] ')
+        date = input(
+            'Please enter a day you want to book for? [YYYY-MM-DD] ')
         try:
             if date != datetime.strptime(date, "%Y-%m-%d").strftime('%Y-%m-%d'):
                 raise ValueError
@@ -24,7 +25,8 @@ def get_date_and_time():
             continue
 
     while True:
-        time = input('Please enter a time you want to volunteer for? [Hour:Minute:Second] ')
+        time = input(
+            'Please enter a time you want to book for? [Hour:Minute:Second] ')
         try:
             if time != datetime.strptime(time, "%H:%M:%S").strftime('%H:%M:%S'):
                 raise ValueError
@@ -41,13 +43,13 @@ def loading_animation():
     Creates an animation while event is being loaded
     """
 
-    animation = ["[■□□□□□□□□□]","[■■□□□□□□□□]", "[■■■□□□□□□□]", "[■■■■□□□□□□]", "[■■■■■□□□□□]", "[■■■■■■□□□□]", "[■■■■■■■□□□]", "[■■■■■■■■□□]", "[■■■■■■■■■□]", "[■■■■■■■■■■]"]
+    animation = ["[■□□□□□□□□□]", "[■■□□□□□□□□]", "[■■■□□□□□□□]", "[■■■■□□□□□□]", "[■■■■■□□□□□]",
+                 "[■■■■■■□□□□]", "[■■■■■■■□□□]", "[■■■■■■■■□□]", "[■■■■■■■■■□]", "[■■■■■■■■■■]"]
 
     for i in range(len(animation)):
         time.sleep(0.3)
         sys.stdout.write("\r" + animation[i % len(animation)])
         sys.stdout.flush()
-
     print("\n")
 
 
@@ -62,20 +64,22 @@ def create_booking():
         username = temp_file.readline()
     username = username.split('\n')[0]
     service = get_calendar_service()
-    
+
     data_api_time = []
     with open(f'clinix.csv', 'r') as clinix_calendar:
         clinix_csv_reader = (csv.DictReader(clinix_calendar))
         for item in clinix_csv_reader:
             # print("what is in here:",item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split())
-            event_id = item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split()[4]
-            start_time = item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split()[1]
-            start_date = item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split()[0]
+            event_id = item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split()[
+                4]
+            start_time = item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split()[
+                1]
+            start_date = item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split()[
+                0]
 
             data_api_time.append((f'{start_date}T{start_time}', event_id))
 
     date_input, time_input = get_date_and_time()
-
 
     save_event_id = ''
     for item in data_api_time:
@@ -83,7 +87,7 @@ def create_booking():
             save_event_id = item[1]
             break
 
-    #gets event details (getting the clinician's emails)
+    # gets event details (getting the clinician's emails)
     event_result = service.events().get(
         calendarId='codeclinix@gmail.com',
         eventId=save_event_id,
@@ -91,16 +95,15 @@ def create_booking():
 
     attendee_details = event_result['attendees'][0]
     attendee_email = attendee_details.get('email')
-    
 
     event_result = service.events().patch(
-          calendarId='codeclinix@gmail.com',
-          eventId=save_event_id,
-          body={
-           "attendees": [{'email': attendee_email}, {'email': username+'@student.wethinkcode.co.za'}],
-           'sendNotifications': True
-           },
-        ).execute()
+        calendarId='codeclinix@gmail.com',
+        eventId=save_event_id,
+        body={
+            "attendees": [{'email': attendee_email}, {'email': username+'@student.wethinkcode.co.za'}],
+            'sendNotifications': True
+        },
+    ).execute()
 
     print("\n")
     print("Loading...")
@@ -108,6 +111,3 @@ def create_booking():
     print("Booking Successful   (•‿•) ")
     print("Id: ", event_result['id'])
     print(event_result['summary'])
-
-
-

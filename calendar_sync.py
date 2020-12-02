@@ -31,6 +31,7 @@ YELLOW = "\033[1;33m%s\033"  # Yellow
 BLUE = "\033[1;34m%s\033"  # Blue
 NEUTRAL = "\033[0m"  # Reset
 username = ""
+col = defaultdict(list)
 
 
 def fetch_calendar_events(events, agent):
@@ -114,8 +115,49 @@ def from_csv_to_dict(agent):
                      .split('\t')[2].strip(),
                      "Description": row['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION']
                      .split('\t')[4].strip()} for row in csv_reader]
-
     return list
+
+
+def create_col_dict():
+
+    col = defaultdict(list)
+    col[1, '08:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')  # one
+    col[1, '09:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[1, '09:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[2, '10:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')  # two
+    col[2, '10:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[2, '11:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[3, '11:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')  # three
+    col[3, '12:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[3, '12:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[4, '13:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')  # four
+    col[4, '13:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[4, '14:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[5, '14:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')  # five
+    col[5, '15:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[5, '15:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[6, '16:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')  # six
+    col[6, '16:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    col[6, '17:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
+    return col
+
+
+def col_change_to_available(col):
+
+    for _id__, time in col:
+        col[_id__, time] = ("\033[1;34m%s\033[0m" % '---------').center(26, '-')
+
+
+def col_dict_set(col, id, key, set):
+    col[id, key] = set
+
+
+def col_dict_get_all(col):
+    return col
+
+
+def col_dict_get(id, key):
+    return col[id, key]
 
 
 def read_data(agent):
@@ -149,43 +191,10 @@ def read_data(agent):
                               ).strftime(r'%Y-%m-%d')
             table_slot = view_all_slots(date_from_user,
                                         from_csv_to_dict(agent))
-            col = defaultdict(list)
-            col[1, '08:30:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')  # one
-            col[1, '09:00:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[1, '09:30:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[2, '10:00:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')  # two
-            col[2, '10:30:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[2, '11:00:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[3, '11:30:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')  # three
-            col[3, '12:00:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[3, '12:30:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[4, '13:00:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')  # four
-            col[4, '13:30:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[4, '14:00:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[5, '14:30:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')  # five
-            col[5, '15:00:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[5, '15:30:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[6, '16:00:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')  # six
-            col[6, '16:30:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
-            col[6, '17:00:00'] = ("\033[1;34m%s\033[0m" %
-                                  '---------').center(40, '-')
+
+            col = create_col_dict()
+            col_status = create_col_dict()
+            col_change_to_available(col_status)
 
             for item in table_slot:
                 ptable = prettytable.PrettyTable()
@@ -202,23 +211,34 @@ def read_data(agent):
                                               item['Time'].split('-')[1].strip()), r'%Y-%m-%d %H:%M:%S')
 
                     if minutes == 30:
+                        there_is_time = False
                         if agent == 'clinix':
                             block_id = 0
                             for _id_, time in col:
                                 if time == str(first).split()[1].strip():
+                                    there_is_time = True
                                     block_id = _id_
+
+                            if there_is_time:
+                                for _id_, time in col:
+                                    if time == str(first).split()[1].strip():
+                                        if block_id == _id_:
+                                            col_dict_set(
+                                                col_status, _id_,  time, 'AVAILABLE')
 
                             for _id_, time in col:
                                 if block_id == _id_:
                                     item['Description'] = "\033[1;32m%s\033[0m" % item['Description']
-                                    col[_id_, time] = item['Description']
+                                    col_dict_set(col,
+                                                 _id_, time, item['Description'])
 
                         elif agent == 'student' and 'Clinix' not in item['Description']:
                             while first < last:
                                 for _id_, time in col:
                                     if time == str(first).split()[1].strip():
                                         item['Description'] = "\033[1;32m%s\033[0m" % item['Description']
-                                        col[_id_, time] = item['Description']
+                                        col_dict_set(col,
+                                                     _id_, time, item['Description'])
                                 first += timedelta(hours=0,
                                                    minutes=30, seconds=0)
                     else:
@@ -227,10 +247,10 @@ def read_data(agent):
                                 for _id_, time in col:
                                     if time == str(first).split()[1].strip():
                                         item['Description'] = "\033[1;32m%s\033[0m" % item['Description']
-                                        col[_id_, time] = item['Description']
+                                        col_dict_set(col,
+                                                     _id_, time, item['Description'])
                                 first += timedelta(hours=0,
                                                    minutes=30, seconds=0)
-
             date = item['Date']
             date = datetime.strptime(date, '%Y-%m-%d').date()
             date = date.strftime("%Y-%B-%A-%d")
@@ -238,10 +258,12 @@ def read_data(agent):
             day_date = str(date).split('-')[3]
             day_year = str(date).split('-')[0]
             ptable.add_column(
-                f"{day_date} {str(date).split('-')[2]} {day_year}", [*col.values()])
+                f"{day_date} {str(date).split('-')[2]} {day_year}", [*col_dict_get_all(col).values()])
+            if agent == "clinix":
+                ptable.add_column(
+                    f"STATUS", [*col_dict_get_all(col_status).values()])
             ptable.align[f"{day_date} {str(date).split('-')[2]} {day_year}"] = 'l'
             print(ptable)
-        # print(ptable)
     else:
         print('Please login')
 
@@ -346,7 +368,7 @@ def book_slot(agent):
             read_data('clinix')
             create_booking()
     else:
-        print('User not logged in')    
+        print('User not logged in')
 
 
 def create_combined_csv(student_events, clinix_events):
