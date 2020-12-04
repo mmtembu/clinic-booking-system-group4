@@ -61,6 +61,7 @@ def fetch_calendar_events(events, agent):
                 if agent == 'clinix':
                     line.writerow(
                         [date+"   ", time+"   ", event['id'], "   ", event['summary']])
+                    print("show me maxAttendees", event['attendees'])
                 else:
                     line.writerow([date+"   ", time+"   ", event['summary']])
     else:
@@ -120,6 +121,10 @@ def from_csv_to_dict(agent):
 
 def create_col_dict():
 
+    """
+        Creates default dict of two keys, [id, time] and sets them to '---------' which represents not empty slot
+    """
+
     col = defaultdict(list)
     col[1, '08:30:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')  # one
     col[1, '09:00:00'] = ("\033[1;34m%s\033[0m" % '---------').center(40, '-')
@@ -148,8 +153,9 @@ def col_change_to_available(col):
         col[_id__, time] = ("\033[1;34m%s\033[0m" % '---------').center(26, '-')
 
 
-def col_dict_set(col, id, key, set):
-    col[id, key] = set
+def col_dict_set(col, id, key, status):
+    status = "\033[1;36m%s\033[0m" % status
+    col[id, key] = status
 
 
 def col_dict_get_all(col):
@@ -224,7 +230,7 @@ def read_data(agent):
                                     if time == str(first).split()[1].strip():
                                         if block_id == _id_:
                                             col_dict_set(
-                                                col_status, _id_,  time, 'AVAILABLE')
+                                                col_status, _id_,  time, "AVAILABLE")
 
                             for _id_, time in col:
                                 if block_id == _id_:
@@ -303,7 +309,7 @@ def call_api(service, cID, agent):
            ).strftime(r"%Y-%m-%dT%H:%M:%SZ")
 
     events_result = service.events().list(calendarId=cID, timeZone='Africa/Johannesburg',
-                                          timeMin=now, timeMax=end, singleEvents=True, orderBy='startTime').execute()
+                                          timeMin=now, timeMax=end, singleEvents=True, orderBy='startTime', maxAttendees=10).execute()
     return events_result.get('items', [])
 
 
