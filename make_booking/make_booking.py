@@ -66,16 +66,14 @@ def create_booking():
     service = get_calendar_service()
 
     data_api_time = []
-    with open(f'clinix.csv', 'r') as clinix_calendar:
-        clinix_csv_reader = (csv.DictReader(clinix_calendar))
-        for item in clinix_csv_reader:
-            # print("what is in here:",item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split())
-            event_id = item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split()[
-                4]
-            start_time = item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split()[
-                1]
-            start_date = item['DATE\t\t\tTIME\t\t\t\t\tID\t\t\t\t\t\t\tDESCRIPTION'].split()[
-                0]
+    # with open(f'clinix.csv', 'r') as clinix_calendar:
+    with open(f'clinix.json') as clinix_calendar:
+        # clinix_csv_reader = (csv.DictReader(clinix_calendar))
+        clinix_calendar_reader = json.load(clinix_calendar)
+        for item in clinix_calendar_reader['info']:
+            event_id = item['ID']
+            start_time = item['TIME'].split('-')[0].strip()
+            start_date = item['DATE']
 
             data_api_time.append((f'{start_date}T{start_time}', event_id))
 

@@ -54,8 +54,9 @@ def logout():
         if os.path.exists(f"{os.getcwd()}/{username}.json") or os.path.exists(f'{username}.pickle'):
             os.remove(f'{username}.pickle')
             os.remove(f'{username}.json')
-            os.remove(f'student.csv')
-            os.remove(f'clinix.csv')
+            os.remove(f'student.json')
+            os.remove(f'clinix.json')
+            os.remove(f'combined_calendar_list.json')
             os.remove(f'{os.getcwd()}/TempData/temp.txt')
             print(f'{username} successfully removed from system')
         else:
