@@ -49,22 +49,38 @@ def cancel_booking():
         events = []
         reader = json.load(clinix_reader)
         
+        save_event_id = None
         for item in reader['info']:
             if day == item['DATE'] and time == item['TIME'].split('-')[0].strip():
-                if len(item['ATTENDEES']) > 1:
-                    events.append(item['ATTENDEES'])
+                save_event_id = item['ID']
         
-            # gets event details (getting the clinician's emails)
-            event_result = service.events().get(
-                calendarId='codeclinix@gmail.com',
-                eventId=save_event_id,
-            ).execute()
+        
+        # gets event details (getting the clinician's emails)
+        event_result = service.events().get(
+            calendarId='codeclinix@gmail.com',
+            eventId=save_event_id,
+        ).execute()
 
-            if username == event_result['attendees'][1]:
-                
-            attendee_details = event_result['attendees'][1]
-            attendee_email = attendee_details.get('email')        
-        service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[0]).execute()
+        
+        attendee_details = event_result['attendees'][1]
+        attendee_email = attendee_details.get('email')
+        
+        if len(event_result['attendees']) > 1:
+            if f'{username}@student.wethinkcode.co.za' == attendee_email:
+                organizer_details = event_result['attendees'][0]
+                organizer_email = organizer_details.get('email')
+                event_result = service.events().patch(
+                    calendarId='codeclinix@gmail.com',
+                    eventId=save_event_id,
+                    body={
+                        "attendees": [{'email': organizer_email}],
+                        'sendNotifications': True
+                    },
+                ).execute()
+            else:
+                print("Unauthorized email/username")
+        else:
+            print("No one booked")
 
         # # First retrieve the event from the API.
         # event = service.events().get(calendarId='codeclinix@gmail.com', eventId='eventId').execute()
