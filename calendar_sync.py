@@ -51,6 +51,7 @@ def fetch_calendar_events(events, agent):
             end = event['end'].get('dateTime', event['start'].get('date'))
             date = start.split('T')[0]
             time = f"{start.split('T')[1].split('+')[0]} - {end.split('T')[1].split('+')[0]}"
+            print("show me the agent",agent)
             if agent == 'clinix':
                 #|-----------------JSON-----------------|
                 data['info'].append({
@@ -61,16 +62,16 @@ def fetch_calendar_events(events, agent):
                     'SUMMARY':event['description'],
                     'ATTENDEES':event['attendees']
                 })
-            else:
+            elif agent == 'student':
                 #|-----------------JSON-----------------|
                 data['info'].append({
                     'DATE':date,
                     'TIME':time,
                     'DESCRIPTION':event['summary']
                 })
-            #|-----------------JSON-----------------|
-            with open(f'{agent}.json', 'w') as calendar_json:#opens a json file and writes to it
-                json.dump(data, calendar_json)
+        #|-----------------JSON-----------------|
+        with open(f'{agent}.json', 'w') as calendar_json:#opens a json file and writes to it
+            json.dump(data, calendar_json)
     else:
         print(f'No updates were made to the {agent} calendar.')
 
@@ -380,8 +381,7 @@ def get_calendars():
     user_calendar = "primary"
     service = build('calendar', 'v3', credentials=get_credentials(secret_json))
     fetch_calendar_events(call_api(service, clinix, 'clinix'), 'clinix')
-    fetch_calendar_events(
-        call_api(service, user_calendar, 'student'), 'student')
+    fetch_calendar_events(call_api(service, user_calendar, 'student'), 'student')
 
 
 def volunteer_slot(agent):

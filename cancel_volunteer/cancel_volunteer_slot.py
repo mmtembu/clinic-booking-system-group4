@@ -43,22 +43,35 @@ def cancel_volunteer():
         reader = json.load(clinix_calendar_reader)
         
         events = []
+        save_event_id = ''
         for item in reader['info']:
             if day == item['DATE'] and time == item['TIME'].split('-')[0].strip():
                 id_of_event = item['SUMMARY'].split('\n')[1].strip()
     
         for item in reader['info']:
             if id_of_event == item['SUMMARY'].split('\n')[1].strip():
+                save_event_id = item['ID']
                 events.append(item['ID'])
-
-        print(events)
         
-        service = cal_setup.get_calendar_service()
-        
-        service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[0]).execute()
-        service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[1]).execute()
-        service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[2]).execute()
+        with open(os.getcwd()+"/TempData/temp.txt") as user_file:
+            username = user_file.read()
+            email = username+'@student.wethinkcode.co.za'
+            
+        # gets event details (getting the clinician's emails)
+        event_result = service.events().get(
+            calendarId='codeclinix@gmail.com',
+            eventId=save_event_id,
+        ).execute()
 
+        attendee_details = event_result['attendees'][0]
+        attendee_email = attendee_details.get('email')
+        if attendee_email == email:
+            service = cal_setup.get_calendar_service()
+            service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[0]).execute()
+            service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[1]).execute()
+            service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[2]).execute()
+        else:
+            print("Only signed in user can delete an event.")
         # # First retrieve the event from the API.
         # event = service.events().get(calendarId='codeclinix@gmail.com', eventId='eventId').execute()
 
