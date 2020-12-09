@@ -3,7 +3,10 @@ import sys
 import csv
 import importlib
 import time as t
+import uuid
+import json
 from datetime import datetime, timedelta, time
+
 cal_setup = importlib.import_module('create_volunteer.cal_setup')
 
 # from cal_setup import get_calendar_service
@@ -74,6 +77,7 @@ def create_volunteer(username):
 
     service = cal_setup.get_calendar_service()
     day, time = get_date_and_time()
+    unique_uuid = uuid.uuid4().hex
 
     start_time = (int(day.split('-')[0]), int(day.split('-')[1]), int(
         day.split('-')[2]), int(time.split(':')[0]), int(time.split(':')[1]))
@@ -92,7 +96,7 @@ def create_volunteer(username):
 
     event_body_one = {
         "summary": "Clinix session: "+description,
-        "description": 'Patient needs help with: "'+description+'"',
+        "description": 'Patient needs help with: "'+description+'"\n' + unique_uuid,
         "start": {"dateTime": time_start(start_time, 0), "timeZone": 'Africa/Johannesburg'},
         "end": {"dateTime": time_end(start_time, 30), "timeZone": 'Africa/Johannesburg'},
         "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
@@ -104,7 +108,7 @@ def create_volunteer(username):
 
     event_body_two = {
         "summary": "Clinix session: "+description,
-        "description": 'Patient needs help with: "'+description+'"',
+        "description": 'Patient needs help with: "'+description+'"\n' + unique_uuid,
         "start": {"dateTime": time_start(start_time, 30), "timeZone": 'Africa/Johannesburg'},
         "end": {"dateTime": time_end(start_time, 60), "timeZone": 'Africa/Johannesburg'},
         "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
@@ -116,7 +120,7 @@ def create_volunteer(username):
 
     event_body_three = {
         "summary": "Clinix session: "+description,
-        "description": 'Patient needs help with: "'+description+'"',
+        "description": 'Patient needs help with: "'+description+'"\n' + unique_uuid,
         "start": {"dateTime": time_start(start_time, 60), "timeZone": 'Africa/Johannesburg'},
         "end": {"dateTime": time_end(start_time, 90), "timeZone": 'Africa/Johannesburg'},
         "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
@@ -151,14 +155,13 @@ def do_delete():
     """
     Used to delete specific volunteer slots on calendar
     """
-    # print("Slot has been canceled")
-    result = sorted(list(result2), key=lambda i: (i['Date'], i['Time']))
-    with open('combined_calendar_list.csv', 'w') as calendar:
-        line = csv.writer(calendar, delimiter='\t',
-                          quoting=csv.QUOTE_NONE, escapechar='\t')
-            # line.writerow(['DATE', '\tTIME', '\t\tDESCRIPTION'])
-        line.writerow(['DATE', '\tTIME', '\t\tID', '\t\t\tDESCRIPTION'])
-        for item in result:
+    
+    day, time = get_date_and_time()
+    
+    with open('clinix.json') as calendar:
+        clinix_reader = json.load(calendar)
+    
+        for item in clinix_reader['info']:
             error_description = item['Description']
             error_date = item['Date']
             error_time = item['Time']
@@ -178,4 +181,4 @@ def do_delete():
 
 
 # if __name__ == '__main__':
-#    create_booking()
+#    create_booking() 

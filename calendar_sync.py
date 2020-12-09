@@ -58,6 +58,7 @@ def fetch_calendar_events(events, agent):
                     'TIME':time,
                     'ID':event['id'],
                     'DESCRIPTION':event['summary'],
+                    'SUMMARY':event['description'],
                     'ATTENDEES':event['attendees']
                 })
             else:
@@ -115,6 +116,7 @@ def from_csv_to_dict(agent):
             list = [{'Date':row['DATE'],
                      'Time':row['TIME'],
                      'Description': row['DESCRIPTION'],
+                     'SUMMARY':row['SUMMARY'],
                      'ID': row['ID'],
                      'Attendees': row['ATTENDEES']}
                     for row in data['info']
