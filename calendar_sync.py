@@ -21,6 +21,8 @@ from google.auth.transport.requests import Request
 from interface import create_profile,  get_user_info
 from create_volunteer.create_volunteer_slot import create_volunteer
 from make_booking.make_booking import create_booking
+from cancel_volunteer.cancel_volunteer_slot import cancel_volunteer
+from cancel_booking.cancel_booking import cancel_booking
 
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -51,7 +53,6 @@ def fetch_calendar_events(events, agent):
             end = event['end'].get('dateTime', event['start'].get('date'))
             date = start.split('T')[0]
             time = f"{start.split('T')[1].split('+')[0]} - {end.split('T')[1].split('+')[0]}"
-            print("show me the agent",agent)
             if agent == 'clinix':
                 #|-----------------JSON-----------------|
                 data['info'].append({
@@ -385,6 +386,9 @@ def get_calendars():
 
 
 def volunteer_slot(agent):
+    """
+    Reads and prints clinix calendar info, also calls create volunteer slot functionality
+    """
     if os.path.exists(f'{agent}.json'):
         with open(f'{agent}.json', 'r') as events_list:
             read_data('clinix')
@@ -392,12 +396,37 @@ def volunteer_slot(agent):
     else:
         print('User not logged in')
 
+def cancel_slot(agent):
+    """
+    Reads and prints clinix calendar info, also calls cancel slot functionality
+    """
+    if os.path.exists(f'{agent}.json'):
+        with open(f'{agent}.json', 'r') as events_list:
+            read_data('clinix')
+            cancel_volunteer()
+    else:
+        print('User not logged in')
+
 
 def book_slot(agent):
+    """
+    Reads and prints clinix calendar info, also calls create booking functionality
+    """
     if os.path.exists(f'{agent}.json'):
         with open(f'{agent}.json', 'r') as events_list:
             read_data('clinix')
             create_booking()
+    else:
+        print('User not logged in')
+
+def cancel_book(agent):
+    """
+    Reads and prints clinix calendar info, also calls cancel booking functionality
+    """
+    if os.path.exists(f'{agent}.json'):
+        with open(f'{agent}.json', 'r') as events_list:
+            read_data('clinix')
+            cancel_booking()
     else:
         print('User not logged in')
 

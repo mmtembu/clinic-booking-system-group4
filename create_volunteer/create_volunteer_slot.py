@@ -74,6 +74,9 @@ def loading_animation():
 
 
 def create_volunteer(username):
+    """
+    Creates 3 volunteer slots (which are in 30 minute intervals) for the clinician 
+    """
 
     service = cal_setup.get_calendar_service()
     day, time = get_date_and_time()
@@ -151,34 +154,9 @@ def create_volunteer(username):
 
 
 
-def do_delete():
-    """
-    Used to delete specific volunteer slots on calendar
-    """
-    
-    day, time = get_date_and_time()
-    
-    with open('clinix.json') as calendar:
-        clinix_reader = json.load(calendar)
-    
-        for item in clinix_reader['info']:
-            error_description = item['Description']
-            error_date = item['Date']
-            error_time = item['Time']
-
-            if item.get('ID', None) == None:
-                line.writerow([item['Date']+"   ",  item['Time']+"   ",
-                               "--------------------------"+"   ", item['Description']])
-
-
-
-    service = cal_setup.get_calendar_service()
-    if create_booking and delete is True:
-        service.events().delete(calendarId, event_result['id']).execute()
-    else:
-        do_help()
-
 
 
 # if __name__ == '__main__':
 #    create_booking() 
+def do_delete():
+    pass

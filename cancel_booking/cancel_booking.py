@@ -5,7 +5,7 @@ import importlib
 import time as t
 import json
 from datetime import datetime, timedelta, time
-cal_setup = importlib.import_module('cal_setup')
+cal_setup = importlib.import_module('cancel_booking.cal_setup')
 
 def get_date_and_time():
     """
@@ -62,10 +62,10 @@ def cancel_booking():
         ).execute()
 
         
-        attendee_details = event_result['attendees'][1]
-        attendee_email = attendee_details.get('email')
         
         if len(event_result['attendees']) > 1:
+            attendee_details = event_result['attendees'][1]
+            attendee_email = attendee_details.get('email')
             if f'{username}@student.wethinkcode.co.za' == attendee_email:
                 organizer_details = event_result['attendees'][0]
                 organizer_email = organizer_details.get('email')
@@ -78,7 +78,7 @@ def cancel_booking():
                     },
                 ).execute()
             else:
-                print("Unauthorized email/username")
+                print("Unauthorized email/username, only signed in user can delete the event.")
         else:
             print("No one booked")
 
@@ -91,5 +91,3 @@ def cancel_booking():
 
         # # Print the updated date.
         # print(updated_event['updated'])
-
-cancel_booking()

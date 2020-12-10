@@ -5,7 +5,7 @@ import importlib
 import time as t
 import json
 from datetime import datetime, timedelta, time
-cal_setup = importlib.import_module('cal_setup')
+cal_setup = importlib.import_module('cancel_volunteer.cal_setup')
 
 def get_date_and_time():
     """
@@ -35,6 +35,9 @@ def get_date_and_time():
 
 
 def cancel_volunteer():
+    """
+    Deletes all 3 volunteer slots the clinician has signed up for
+    """
 
     service = cal_setup.get_calendar_service()
     day, time = get_date_and_time()
@@ -66,13 +69,21 @@ def cancel_volunteer():
         attendee_details = event_result['attendees'][0]
         attendee_email = attendee_details.get('email')
         if attendee_email == email:
+
+            print("Loading...")
+            loading_animation()
+
+            #deletes all 3 events usng an api request
             service = cal_setup.get_calendar_service()
             service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[0]).execute()
             service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[1]).execute()
             service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[2]).execute()
+
+            print("Slot Deleted  (•‿•)")
+
         else:
-            print("Only signed in user can delete an event.")
-        # # First retrieve the event from the API.
+            print("Unauthorized email/username, only signed in user can delete the event.")
+        # First retrieve the event from the API.
         # event = service.events().get(calendarId='codeclinix@gmail.com', eventId='eventId').execute()
 
         # event['summary'] = 'Appointment at Somewhere'
@@ -82,4 +93,16 @@ def cancel_volunteer():
         # # Print the updated date.
         # print(updated_event['updated'])
 
-cancel_volunteer()
+def loading_animation():
+    """
+    Creates an animation while event is being loaded
+    """
+
+    animation = ["[■□□□□□□□□□]","[■■□□□□□□□□]", "[■■■□□□□□□□]", "[■■■■□□□□□□]", "[■■■■■□□□□□]", "[■■■■■■□□□□]", "[■■■■■■■□□□]", "[■■■■■■■■□□]", "[■■■■■■■■■□]", "[■■■■■■■■■■]"]
+
+    for i in range(len(animation)):
+        t.sleep(0.3)
+        sys.stdout.write("\r" + animation[i % len(animation)])
+        sys.stdout.flush()
+
+    print("\n")

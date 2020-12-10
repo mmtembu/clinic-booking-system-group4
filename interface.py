@@ -50,7 +50,7 @@ def create_profile():
 def logout():
 
     try:
-        username = input("Please enter Username you want to logout: ")
+        username = input("Please enter the username you want to logout: ")
         if os.path.exists(f"{os.getcwd()}/{username}.json") or os.path.exists(f'{username}.pickle'):
             os.remove(f'{username}.pickle')
             os.remove(f'{username}.json')

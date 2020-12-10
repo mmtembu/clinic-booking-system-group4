@@ -1,9 +1,10 @@
 
 import sys
 from interface import create_profile,  get_user_info, is_logged_in, logout
-from calendar_sync import get_calendars, read_data, volunteer_slot, book_slot, create_combined_csv
+from calendar_sync import get_calendars, read_data, volunteer_slot, book_slot, create_combined_csv, cancel_slot, cancel_book
 from create_volunteer import create_volunteer_slot
 from create_volunteer.create_volunteer_slot import do_delete
+from cancel_volunteer.cancel_volunteer_slot import cancel_volunteer
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
@@ -28,11 +29,16 @@ def do_help():
     """Lists all the available commands"""
     print("""
 HELP          -   lists all the available commands the booking system provides
-LOGIN         -   initializes the clinix calendar
+LOGIN         -   initializes the clinix calendar (also updates calendar)
 LOGOUT        -   use this command to remove your credentials from current
                   system
 VIEW_CALENDAR -   shows list of calendars you can view
 MAKE_BOOKING  -   makes the booking for the patient
+CREATE_SLOT   -   creates a set of 3 volunteer slots for the clinician
+CANCEL_BOOKING -  cancels booking for the patient
+CANCEL_SLOT   -   cancels volunteer slots for the clinician
+
+PS. Please login again to refresh the calendar
 """)
 
 
@@ -49,9 +55,17 @@ if __name__ == '__main__':
             logout()
         elif sys.argv[1].upper() == 'MAKE_BOOKING':
             book_slot('clinix')
+        elif sys.argv[1].upper() == 'CREATE_SLOT':
+            volunteer_slot('clinix')
+        elif sys.argv[1].upper() == 'CANCEL_BOOKING':
+            cancel_book('clinix')
+        elif sys.argv[1].upper() == 'CANCEL_SLOT':
+            cancel_slot('clinix')
+        
+
         elif sys.argv[1].upper() == 'VIEW_CALENDAR':
             print(
-                'Which calendar do you want?\n1. Your calendar\n2. Clinix Calendar\n3. Volunteer Slot\n4. Cancel Volunteer Slot\n')
+                'Which calendar do you want?\n1. Your calendar\n2. Clinix Calendar\n')
             num = input('which calendar do you want?[choose number] ')
             print()
             create_combined_csv('student', 'clinix')
@@ -62,10 +76,6 @@ if __name__ == '__main__':
                 read_data('student')
             elif num == '2':
                 read_data('clinix')
-            elif num == '3':
-                volunteer_slot('clinix')
-            elif num == '4':
-                do_delete()
 
             print()
         else:
