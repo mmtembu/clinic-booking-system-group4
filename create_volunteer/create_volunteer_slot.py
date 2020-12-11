@@ -9,8 +9,6 @@ from datetime import datetime, timedelta, time
 
 cal_setup = importlib.import_module('create_volunteer.cal_setup')
 
-# from cal_setup import get_calendar_service
-# from cal_setup import convert_to_RFC_datetime as dt
 
 calendar_s = sys.path.append("../calendar_sync.py")
 interface_s = sys.path.append("../interface.py")
@@ -20,12 +18,19 @@ hour_adjustment = -2
 
 
 def time_start(time, mins):
+    """
+    Converts the start time of the event
+    """
     new_time = cal_setup.convert_to_RFC_datetime(time[0], time[1], time[2],
                                                  time[3] + hour_adjustment, time[4], mins)
     return new_time
 
 
 def time_end(time, mins):
+    """
+    Converts the end time of the event
+    Adds 30 minutes after the start time
+    """
     new_time = cal_setup.convert_to_RFC_datetime(
         time[0], time[1], time[2], time[3] + hour_adjustment, time[4], mins)
     return new_time
@@ -152,11 +157,3 @@ def create_volunteer(username):
     print("Slot Created  (•‿•)")
     print("Summary: ", event_result['summary'])
 
-
-
-
-
-# if __name__ == '__main__':
-#    create_booking() 
-def do_delete():
-    pass

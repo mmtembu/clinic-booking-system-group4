@@ -44,7 +44,7 @@ def cancel_volunteer():
 
     with open('clinix.json') as clinix_calendar_reader:
         reader = json.load(clinix_calendar_reader)
-        
+        id_of_event = None
         events = []
         save_event_id = ''
         for item in reader['info']:
@@ -52,9 +52,13 @@ def cancel_volunteer():
                 id_of_event = item['SUMMARY'].split('\n')[1].strip()
     
         for item in reader['info']:
-            if id_of_event == item['SUMMARY'].split('\n')[1].strip():
-                save_event_id = item['ID']
-                events.append(item['ID'])
+            if id_of_event != None:
+                if id_of_event == item['SUMMARY'].split('\n')[1].strip():
+                    save_event_id = item['ID']
+                    events.append(item['ID'])
+            else:
+                print("No event there, please choose a selected slot or update the calendar")
+                return None
         
         with open(os.getcwd()+"/TempData/temp.txt") as user_file:
             username = user_file.read()
@@ -83,15 +87,7 @@ def cancel_volunteer():
 
         else:
             print("Unauthorized email/username, only signed in user can delete the event.")
-        # First retrieve the event from the API.
-        # event = service.events().get(calendarId='codeclinix@gmail.com', eventId='eventId').execute()
 
-        # event['summary'] = 'Appointment at Somewhere'
-
-        # updated_event = service.events().update(calendarId='primary', eventId=event['id'], body=event).execute()
-
-        # # Print the updated date.
-        # print(updated_event['updated'])
 
 def loading_animation():
     """

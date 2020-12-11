@@ -13,7 +13,7 @@ import uuid
 import difflib
 import json
 from collections import defaultdict
-from slot_package import filter_slots
+# from slot_package import filter_slots
 from datetime import datetime
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -32,8 +32,10 @@ GREEN = "\033[1;32m%s\033"  # GREEN
 YELLOW = "\033[1;33m%s\033"  # Yellow
 BLUE = "\033[1;34m%s\033"  # Blue
 NEUTRAL = "\033[0m"  # Reset
-username = ""
+
 col = defaultdict(list)
+
+username = ""
 
 
 def fetch_calendar_events(events, agent):
@@ -155,6 +157,9 @@ def create_col_dict():
 
 
 def col_change_to_available(col):
+    """
+    Changes color text to let the user know if slot is available
+    """
 
     for _id__, time in col:
         col[_id__, time] = ("\033[1;34m%s\033[0m" % '---------').center(26, '-')
@@ -171,15 +176,16 @@ def col_dict_get_all(col):
 def col_dict_get(id, key):
     return col[id, key]
 
-#username: rsenne@student.wethinkcode.co.za
-#password: 300sgm@sgm@!44<>.
 
 def read_data(agent):
+    """
+    Reads and displays the data of the google calendar in the form of a table
+    """
     if os.path.exists(f'{agent}.json'):
         print(f'Getting the upcoming for the next 7 days [{agent}]\n')
         base_day = datetime.today()
         date_list = [(base_day + timedelta(days=x, minutes=60)).strftime(r'%Y %d %BD%A')for x in range(7)]
-                     # (r'%Y-%b-%d %a')(r'%Y-%b-%d %a')(r'%Y-%B-%d %A')(r'%Y %d %BD%A')(r'%Y-%m-%d')
+
 
         dates_ = [item['Date'] for item in from_csv_to_dict(agent)]
 
@@ -282,6 +288,9 @@ def read_data(agent):
 
 
 def view_all_slots(day, list_of_slots):
+    """
+    Gets all slot details from the list of slots provided
+    """
 
     list_of_times = []
     base_time = datetime(int(datetime.today().strftime("%Y")), int(
@@ -316,7 +325,6 @@ def view_all_slots(day, list_of_slots):
                                         {"Date": i['Date'],
                                         "Time":i['Time'], 
                                         "Description": i['Description']})
-                    # list_of_times.pop(list_of_times.index(j))
                 else:
                     list_of_times.insert(list_of_times.index(j),
                                         {"Date": i['Date'],
@@ -329,6 +337,9 @@ def view_all_slots(day, list_of_slots):
 
 
 def call_api(service, cID, agent):
+    """
+    Requests api to get the next 7 days worth of events depending of todays date
+    """
 
     # Call the Calendar API
     now = datetime.today().strftime(r"%Y-%m-%dT%H:%M:%SZ")
@@ -341,9 +352,12 @@ def call_api(service, cID, agent):
 
 
 def get_credentials(secret_json):
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
+    """
+    The file token.pickle stores the user's access and refresh tokens, and is
+    created automatically when the authorization flow completes for the first
+    time.
+    """
+
     global username
     username = ''
     does_existed, profile = get_user_info()
@@ -455,15 +469,7 @@ def create_combined_csv(student_events, clinix_events):
                                      "Description": row['DESCRIPTION']}
                                     for row in clinix_json_reader['info']]
 
-        # print("there are similarities here")
-        # for student_ in list_of_slots:
-        #     for clinix_ in list_of_slots_clinix:
-        #         if student_['Time'] == clinix_['Time'] and student_['Description'] == clinix_['Description']:
-        #             print("where is this: ", list_of_slots.pop(list_of_slots.index(student_)))
 
-        # print("show me this:", *list_of_slots, sep='\n')
-        # list_of_slots.append(list_of_slots)
-        # result =  [{x['Date'], x['Time'], x['Description']} for x in list_of_slots + list_of_slots}].values()
         result2 = [x for x in list_of_slots + list_of_slots_clinix]
 
         result = sorted(list(result2), key=lambda i: (i['Date'], i['Time']))

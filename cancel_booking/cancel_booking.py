@@ -56,10 +56,14 @@ def cancel_booking():
         
         
         # gets event details (getting the clinician's emails)
-        event_result = service.events().get(
-            calendarId='codeclinix@gmail.com',
-            eventId=save_event_id,
-        ).execute()
+        if save_event_id != None:
+            event_result = service.events().get(
+                calendarId='codeclinix@gmail.com',
+                eventId=save_event_id,
+            ).execute()
+        else:
+             print("No event there, please choose a selected slot or update the calendar")
+             return None
 
         
         
