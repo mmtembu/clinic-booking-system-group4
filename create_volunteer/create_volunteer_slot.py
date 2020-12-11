@@ -77,6 +77,30 @@ def loading_animation():
 
     print("\n")
 
+def is_slot_booked(day, time):
+
+    calendar_sync.get_calendars()
+    #|-------------Double Booking Check-------------|
+    with open('clinix.json') as clinix_reader:
+        reader = json.load(clinix_reader)
+        
+        # save_event_id = None
+        for item in reader['info']:
+            if day == item['DATE'] and time == item['TIME'].split('-')[0].strip():
+                return True
+        return False
+
+        
+        # gets event details (getting the clinician's emails)
+        # if save_event_id != None:
+        #     event_result = service.events().get(
+        #         calendarId='codeclinix@gmail.com',
+        #         eventId=save_event_id,
+        #     ).execute()
+        # else:
+        #      print("No event there, please choose a selected slot or update the calendar")
+        #      return None    
+
 
 def create_volunteer(username):
     """
@@ -89,8 +113,6 @@ def create_volunteer(username):
 
     start_time = (int(day.split('-')[0]), int(day.split('-')[1]), int(
         day.split('-')[2]), int(time.split(':')[0]), int(time.split(':')[1]))
-    start = time_start(start_time, 0)
-    end = time_end(start_time, 30)
     description = input("Which topic do you want to tutor? ")
 
     username = ''
@@ -99,62 +121,63 @@ def create_volunteer(username):
 
     username = username.split('\n')[0]
 
-    first = datetime.strptime(
-        (day+'T'+time), r'%Y-%m-%dT%H:%M:%S')
+    if not is_slot_booked(day, time):
 
-    event_body_one = {
-        "summary": "Clinix session: "+description,
-        "description": 'Patient needs help with: "'+description+'"\n' + unique_uuid,
-        "start": {"dateTime": time_start(start_time, 0), "timeZone": 'Africa/Johannesburg'},
-        "end": {"dateTime": time_end(start_time, 30), "timeZone": 'Africa/Johannesburg'},
-        "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
-        "anyoneCanAddSelf": False,
-        'maxAttendees': 2,
-        'sendNotifications': True,
-        'sendUpdates': 'all',
-        "colorId": '2'}
+        event_body_one = {
+            "summary": "Clinix session: "+description,
+            "description": 'Patient needs help with: "'+description+'"\n' + unique_uuid,
+            "start": {"dateTime": time_start(start_time, 0), "timeZone": 'Africa/Johannesburg'},
+            "end": {"dateTime": time_end(start_time, 30), "timeZone": 'Africa/Johannesburg'},
+            "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
+            "anyoneCanAddSelf": False,
+            'maxAttendees': 2,
+            'sendNotifications': True,
+            'sendUpdates': 'all',
+            "colorId": '2'}
 
-    event_body_two = {
-        "summary": "Clinix session: "+description,
-        "description": 'Patient needs help with: "'+description+'"\n' + unique_uuid,
-        "start": {"dateTime": time_start(start_time, 30), "timeZone": 'Africa/Johannesburg'},
-        "end": {"dateTime": time_end(start_time, 60), "timeZone": 'Africa/Johannesburg'},
-        "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
-        "anyoneCanAddSelf": False,
-        'maxAttendees': 2,
-        'sendNotifications': True,
-        'sendUpdates': 'all',
-        "colorId": '2'}
+        event_body_two = {
+            "summary": "Clinix session: "+description,
+            "description": 'Patient needs help with: "'+description+'"\n' + unique_uuid,
+            "start": {"dateTime": time_start(start_time, 30), "timeZone": 'Africa/Johannesburg'},
+            "end": {"dateTime": time_end(start_time, 60), "timeZone": 'Africa/Johannesburg'},
+            "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
+            "anyoneCanAddSelf": False,
+            'maxAttendees': 2,
+            'sendNotifications': True,
+            'sendUpdates': 'all',
+            "colorId": '2'}
 
-    event_body_three = {
-        "summary": "Clinix session: "+description,
-        "description": 'Patient needs help with: "'+description+'"\n' + unique_uuid,
-        "start": {"dateTime": time_start(start_time, 60), "timeZone": 'Africa/Johannesburg'},
-        "end": {"dateTime": time_end(start_time, 90), "timeZone": 'Africa/Johannesburg'},
-        "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
-        "anyoneCanAddSelf": False,
-        'maxAttendees': 2,
-        'sendNotifications': True,
-        'sendUpdates': 'all',
-        "colorId": '2'}
+        event_body_three = {
+            "summary": "Clinix session: "+description,
+            "description": 'Patient needs help with: "'+description+'"\n' + unique_uuid,
+            "start": {"dateTime": time_start(start_time, 60), "timeZone": 'Africa/Johannesburg'},
+            "end": {"dateTime": time_end(start_time, 90), "timeZone": 'Africa/Johannesburg'},
+            "attendees": [{'email': username + '@student.wethinkcode.co.za'}],
+            "anyoneCanAddSelf": False,
+            'maxAttendees': 2,
+            'sendNotifications': True,
+            'sendUpdates': 'all',
+            "colorId": '2'}
 
-    print("\n")
-    print("Loading...")
-    loading_animation()
+        print("\n")
+        print("Loading...")
+        loading_animation()
 
-    event_result = service.events().insert(
-        calendarId='codeclinix@gmail.com', body=event_body_one).execute()
-    print("Event one ID: ", event_result['id'])
+        event_result = service.events().insert(
+            calendarId='codeclinix@gmail.com', body=event_body_one).execute()
+        print("Event one ID: ", event_result['id'])
 
-    event_result = service.events().insert(
-        calendarId='codeclinix@gmail.com', body=event_body_two).execute()
-    print("Event two  ID: ", event_result['id'])
+        event_result = service.events().insert(
+            calendarId='codeclinix@gmail.com', body=event_body_two).execute()
+        print("Event two  ID: ", event_result['id'])
 
-    event_result = service.events().insert(
-        calendarId='codeclinix@gmail.com', body=event_body_three).execute()
-    print("Event three ID: ", event_result['id'])
+        event_result = service.events().insert(
+            calendarId='codeclinix@gmail.com', body=event_body_three).execute()
+        print("Event three ID: ", event_result['id'])
 
-    print("Slot Created  (•‿•)")
-    print("Summary: ", event_result['summary'])
-    calendar_sync.get_calendars()
+        print("Slot Created  (•‿•)")
+        print("Summary: ", event_result['summary'])
+        calendar_sync.get_calendars()
+    else:
+        print("Unfortunately that slot has been taken.")
 
