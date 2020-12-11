@@ -360,11 +360,13 @@ def get_credentials(secret_json):
 
     global username
     username = ''
-    does_existed, profile = get_user_info()
-    if does_existed:
-        username = profile["username"]
+    if os.path.exists(os.getcwd()+'/TempData/temp.txt'):
+        with open(os.getcwd()+'/TempData/temp.txt') as username_file:
+            username = username_file.read()
     else:
-        return None
+        does_existed, profile = get_user_info()
+        if does_existed:
+            username = profile["username"]
 
     creds = None
 

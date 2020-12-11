@@ -6,7 +6,7 @@ import time as t
 import uuid
 import json
 from datetime import datetime, timedelta, time
-
+calendar_sync = importlib.import_module('calendar_sync')
 cal_setup = importlib.import_module('create_volunteer.cal_setup')
 
 
@@ -156,4 +156,5 @@ def create_volunteer(username):
 
     print("Slot Created  (•‿•)")
     print("Summary: ", event_result['summary'])
+    calendar_sync.get_calendars()
 

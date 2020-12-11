@@ -3,11 +3,12 @@ import sys
 import json
 import os
 import csv
-import make_booking.cal_setup
+import importlib
 from datetime import datetime
 from datetime import datetime, timedelta
+import make_booking.cal_setup
 from make_booking.cal_setup import get_calendar_service
-
+calendar_sync = importlib.import_module('calendar_sync')
 
 def get_date_and_time():
     """
@@ -66,9 +67,7 @@ def create_booking():
     service = get_calendar_service()
 
     data_api_time = []
-    # with open(f'clinix.csv', 'r') as clinix_calendar:
     with open(f'clinix.json') as clinix_calendar:
-        # clinix_csv_reader = (csv.DictReader(clinix_calendar))
         clinix_calendar_reader = json.load(clinix_calendar)
         for item in clinix_calendar_reader['info']:
             event_id = item['ID']
@@ -91,21 +90,45 @@ def create_booking():
         eventId=save_event_id,
     ).execute()
 
-    attendee_details = event_result['attendees'][0]
-    attendee_email = attendee_details.get('email')
+    attendee_details = None
+    attendee_email = None
 
-    event_result = service.events().patch(
-        calendarId='codeclinix@gmail.com',
-        eventId=save_event_id,
-        body={
-            "attendees": [{'email': attendee_email}, {'email': username+'@student.wethinkcode.co.za'}],
-            'sendNotifications': True
-        },
-    ).execute()
+    try:
+        attendee_details = event_result['attendees'][0]
+        attendee_email = attendee_details.get('email')
 
-    print("\n")
-    print("Loading...")
-    loading_animation()
-    print("Booking Successful   (•‿•) ")
-    print("Id: ", event_result['id'])
-    print(event_result['summary'])
+        if len(event_result['attendees']) == 1:
+
+            if username == event_result['attendees'][0].get('email').split('@')[0]:
+                print("Cannot book a slot you've volunteered for.")
+            else:
+                event_result = service.events().patch(
+                    calendarId='codeclinix@gmail.com',
+                    eventId=save_event_id,
+                    body={
+                        "attendees": [{'email': attendee_email}, {'email': username+'@student.wethinkcode.co.za'}],
+                        'sendNotifications': True
+                    },
+                ).execute()
+
+                print("\n")
+                print("Loading...")
+                loading_animation()
+                print("Booking Successful   (•‿•) ")
+                print("Id: ", event_result['id'])
+                print(event_result['summary'])
+                calendar_sync.get_calendars()
+
+        elif len(event_result['attendees']) == 2:
+
+            attendee_details = event_result['attendees'][1]
+            attendee_email = attendee_details.get('email')
+            if username == attendee_email.split('@')[0].strip():
+                print("You've already booked a slot.")
+            elif username == event_result['attendees'][0].get('email').split('@')[0]:
+                print("Cannot book a slot you've volunteered for.")
+            elif username != attendee_email.split('@')[0].strip():
+                print("Someone already booked for that slot.")
+
+    except KeyError:
+        print("There's no event there.")
