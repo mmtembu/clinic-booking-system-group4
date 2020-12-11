@@ -12,7 +12,7 @@ def get_date_and_time():
     This is to validate that the correct date and time being entered
     """
     while True:
-        date = input('Please enter a day you want to volunteer for? [YYYY-MM-DD] ')
+        date = input('Please enter a day you want to book for? [YYYY-MM-DD] ')
         try:
             if date != datetime.strptime(date, "%Y-%m-%d").strftime('%Y-%m-%d'):
                 raise ValueError
@@ -22,7 +22,7 @@ def get_date_and_time():
             continue
 
     while True:
-        time = input('Please enter a time you want to volunteer for? [Hour:Minute:Second] ')
+        time = input('Please enter a time you want to book for? [Hour:Minute:Second] ')
         try:
             if time != datetime.strptime(time, "%H:%M:%S").strftime('%H:%M:%S'):
                 raise ValueError
