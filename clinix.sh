@@ -2,5 +2,5 @@
 
 function clinix(){
 
-    python3 ~/.config/clinix/clinix-api-start.py $1
+    python3 ~/.config/clinix/clinix_api_start.py $1
 }
