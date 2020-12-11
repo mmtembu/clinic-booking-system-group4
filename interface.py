@@ -4,29 +4,34 @@ import os
 import stdiomask
 import hashlib
 import uuid
+import tempfile
 
-# username = ''
+
+"""
+Interface Module handles user profiles and handles login details
+"""
+
+
 is_logged_in = False
 
 
 def create_profile():
     """
-    This funtion creates the users config file if one doesnt exist and 
+    This funtion creates the users config file if one doesnt exist and
     file path if one exist
     """
-    # global username
+
+    file1 = None
     username = input("Please enter student username: ")
-    while not os.path.exists(f"{username}.json"):
-        # while username == '':
-        # username = input("Please enter student username: ")
+    if not os.path.exists(f"{os.getcwd()}/{username}.json"):
         campus = input("Which campus are you from: ")
         email = username + "@student.wethinkcode.co.za"
-        pword1 = stdiomask.getpass("Please enter password: ")
+        pword1 = stdiomask.getpass("Please create a password: ")
         pword2 = stdiomask.getpass("Please confirm password: ")
 
         while pword1 != pword2:
             print("Password doesn't match : ")
-            pword1 = stdiomask.getpass("Please enter password: ")
+            pword1 = stdiomask.getpass("Please create a password: ")
             pword2 = stdiomask.getpass("Please confirm password: ")
 
         with open(f"{username}.json", "w") as person:
@@ -34,22 +39,23 @@ def create_profile():
                        "password": password_hasher(pword1, pword2)}, person)
             print("Now you can login")
     else:
-        with open(f"{username}.json", "r") as person:
-            file1 = json.load(person)
-            print('configuration file exists:\n',
-                  f'{username}.json')
-            return file1
+        print('User exists')
 
 
 def logout():
+    """
+    Logout deletes all user related info/files
+    """
 
     try:
-        username = input("Please enter Username you want to logout: ")
-        if os.path.exists(f'{username}.pickle'):
+        username = input("Please enter the username you want to logout: ")
+        if os.path.exists(f"{os.getcwd()}/{username}.json") or os.path.exists(f'{username}.pickle'):
             os.remove(f'{username}.pickle')
             os.remove(f'{username}.json')
-            os.remove(f'student.csv')
-            os.remove(f'clinix.csv')
+            os.remove(f'student.json')
+            os.remove(f'clinix.json')
+            os.remove(f'combined_calendar_list.json')
+            os.remove(f'{os.getcwd()}/TempData/temp.txt')
             print(f'{username} successfully removed from system')
         else:
             print('No user found')
@@ -77,37 +83,40 @@ def password_hasher(pword1, pword2):
     """
     This function will encrypt the password
     """
-    # salt = uuid.uuid4().hex
     return hashlib.sha512(pword1.encode('utf-8')).hexdigest()
-
-
-"TODO check pickle's expiry"
 
 
 def get_user_info():
     """
-
+    Handles the login and validates the password and user
     """
     global is_logged_in
-    # global username
     username = input("Please enter student username: ")
     if os.path.exists(f"{username}.json"):
         with open(f"{username}.json", "r") as person:
             person_info = json.loads(person.read())
-            # print("Please enter password to login ")
             if password_validator(stdiomask.getpass("Please enter password to login: "), person_info["password"]):
                 is_logged_in = True
+                create_temp_data(username)
                 if os.path.exists(f'{username}.pickle'):
-                    # print("Token expiry: ")
                     return True, person_info
                 else:
                     return True, person_info
-
             else:
                 print("Incorrect password")
                 exit()
-                # return False, "Incorrect password"
     else:
         print("Use 'clinix init'")
         exit()
-# print(create_profile())
+
+
+def create_temp_data(username):
+    """
+    Creates a temporary data file which stores the username of the person logged in
+    """
+    if os.path.exists(os.getcwd()+"/TempData/temp.txt"):
+        with open(os.getcwd()+'/TempData/temp.txt', 'r') as temp_file:
+            print("Welcome back,", temp_file.read())
+    else:
+        with open(os.getcwd()+'/TempData/temp.txt', 'w') as temp_file:
+            temp_file.write(username)

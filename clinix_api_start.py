@@ -1,28 +1,23 @@
-
 import sys
 from interface import create_profile,  get_user_info, is_logged_in, logout
 from calendar_sync import get_calendars, read_data, volunteer_slot, book_slot, create_combined_csv, cancel_slot, cancel_book
 from create_volunteer import create_volunteer_slot
-from create_volunteer.create_volunteer_slot import do_delete
 from cancel_volunteer.cancel_volunteer_slot import cancel_volunteer
+
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
 def main():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
+    """
+    Shows basic usage of the Google Calendar API.
+    Prints the start and name of the next 7 events on the user's calendar.
+    Does this whenever someone logs in (also updates calendar)
     """
 
     get_calendars()
-    # print(get_both_calendars())
-    # username = get_username()
-    # make_booking2.create_booking(username)
 
-#   CLINICIANS    -   allows the student to view all the available clinicians
-#   CLINIX        -   shows coding clinix calendar events
-#   BOOKING       -   allows a student to make a booking to an available slot
 
 
 def do_help():
@@ -66,7 +61,7 @@ if __name__ == '__main__':
         elif sys.argv[1].upper() == 'VIEW_CALENDAR':
             print(
                 'Which calendar do you want?\n1. Your calendar\n2. Clinix Calendar\n')
-            num = input('which calendar do you want?[choose number] ')
+            num = input('Which calendar do you want?[choose number] ')
             print()
             create_combined_csv('student', 'clinix')
 

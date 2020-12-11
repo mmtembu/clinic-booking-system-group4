@@ -1,0 +1,26 @@
+[
+    {'kind': 'calendar#event', 'etag': '"3211366738666000"', 'id': '31oanbn0d7r7i5ppju5qknn231', 'status': 'confirmed', 'htmlLink': 'https://www.google.com/calendar/event?eid=MzFvYW5ibjBkN3I3aTVwcGp1NXFrbm4yMzEgY29kZWNsaW5peEBt&ctz=Africa/Johannesburg', 'created': '2020-11-18T07:09:20.000Z', 'updated': '2020-11-18T07:09:29.333Z', 'summary': 'List comprehension', 
+    'creator': 
+        {'email': 'codeclinix@gmail.com', 'self': True}, 
+        'organizer': {'email': 'codeclinix@gmail.com', 'self': True}, 
+        'start': {'dateTime': '2020-11-19T11:00:00+02:00'}, 
+        'end': {'dateTime': '2020-11-19T11:30:00+02:00'}, 
+        'iCalUID': '31oanbn0d7r7i5ppju5qknn231@google.com', 'sequence': 0, 
+        'reminders': {'useDefault': True}}, 
+        
+    {'kind': 'calendar#event', 'etag': '"3211366784930000"', 'id': '7nji2t5qsi5ludkhf03l6fd8ic', 'status': 'confirmed', 'htmlLink': 'https://www.google.com/calendar/event?eid=N25qaTJ0NXFzaTVsdWRraGYwM2w2ZmQ4aWMgY29kZWNsaW5peEBt&ctz=Africa/Johannesburg', 'created': '2020-11-18T07:09:52.000Z', 'updated': '2020-11-18T07:09:52.465Z', 'summary': 'Recursion', 
+    'creator': 
+        {'email': 'codeclinix@gmail.com', 'self': True},
+        'organizer': {'email': 'codeclinix@gmail.com', 'self': True}, 
+        'start': {'dateTime': '2020-11-20T12:30:00+02:00'}, 
+        'end': {'dateTime': '2020-11-20T13:00:00+02:00'}, 
+        'iCalUID': '7nji2t5qsi5ludkhf03l6fd8ic@google.com', 'sequence': 0, 'reminders': {'useDefault': True}}, 
+        
+    {'kind': 'calendar#event', 'etag': '"3211366848814000"', 'id': '7fa5bs91b132r7b7r4fnfso6on', 'status': 'confirmed', 'htmlLink': 'https://www.google.com/calendar/event?eid=N2ZhNWJzOTFiMTMycjdiN3I0Zm5mc282b24gY29kZWNsaW5peEBt&ctz=Africa/Johannesburg', 'created': '2020-11-18T07:10:16.000Z', 'updated': '2020-11-18T07:10:24.407Z', 'summary': 'Recursion', 
+    'creator': 
+        {'email': 'codeclinix@gmail.com', 'self': True}, 
+        'organizer': {'email': 'codeclinix@gmail.com', 'self': True}, 
+        'start': {'dateTime': '2020-11-21T10:00:00+02:00'}, 
+        'end': {'dateTime': '2020-11-21T10:30:00+02:00'}, 
+        'iCalUID': '7fa5bs91b132r7b7r4fnfso6on@google.com', 'sequence': 2, 
+        'reminders': {'useDefault': True}}]
