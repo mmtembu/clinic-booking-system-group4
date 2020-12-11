@@ -92,7 +92,7 @@ def create_booking():
     ).execute()
 
     attendee_details = event_result['attendees'][0]
-    attendee_email = attendee_details.get('email')
+    attendee_email = attendee_details.get('email')    
 
     event_result = service.events().patch(
         calendarId='codeclinix@gmail.com',

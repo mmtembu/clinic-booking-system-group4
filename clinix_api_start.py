@@ -23,15 +23,16 @@ def main():
 def do_help():
     """Lists all the available commands"""
     print("""
-HELP          -   lists all the available commands the booking system provides
-LOGIN         -   initializes the clinix calendar (also updates calendar)
-LOGOUT        -   use this command to remove your credentials from current
-                  system
-VIEW_CALENDAR -   shows list of calendars you can view
-MAKE_BOOKING  -   makes the booking for the patient
-CREATE_SLOT   -   creates a set of 3 volunteer slots for the clinician
-CANCEL_BOOKING -  cancels booking for the patient
-CANCEL_SLOT   -   cancels volunteer slots for the clinician
+HELP            -   lists all the available commands the booking system provides
+INIT            -   allows the student to create a local account
+LOGIN           -   initializes the clinix calendar (also updates calendar)
+LOGOUT          -   use this command to remove your credentials from current
+                    system
+VIEW_CALENDAR   -   shows list of calendars you can view
+MAKE_BOOKING    -   makes the booking for the patient
+CREATE_SLOT     -   creates a set of 3 volunteer slots for the clinician
+CANCEL_BOOKING  -   cancels booking for the patient
+CANCEL_SLOT     -   cancels volunteer slots for the clinician
 
 PS. Please login again to refresh the calendar
 """)
