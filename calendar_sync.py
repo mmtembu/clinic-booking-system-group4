@@ -297,7 +297,7 @@ def view_all_slots(day, list_of_slots):
         datetime.today().strftime("%m")), int(datetime.today().strftime("%d")), 8, 30)
 
     list_of_times = [{"Date": day, "Time": (base_time + timedelta(minutes=x)).strftime(
-        r'%H:%M:%S'), "Description": "----"} for x in range(0, 481, 30)]
+        r'%H:%M:%S'), "Description": "----"} for x in range(0, 511, 30)]
 
     slots = []
     for item in list_of_slots:
@@ -360,11 +360,13 @@ def get_credentials(secret_json):
 
     global username
     username = ''
-    does_existed, profile = get_user_info()
-    if does_existed:
-        username = profile["username"]
+    if os.path.exists(os.getcwd()+'/TempData/temp.txt'):
+        with open(os.getcwd()+'/TempData/temp.txt') as username_file:
+            username = username_file.read()
     else:
-        return None
+        does_existed, profile = get_user_info()
+        if does_existed:
+            username = profile["username"]
 
     creds = None
 

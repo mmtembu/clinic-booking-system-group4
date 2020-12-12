@@ -48,14 +48,20 @@ def logout():
     """
 
     try:
-        username = input("Please enter the username you want to logout: ")
+        username = input("Please enter Username you want to logout: ")
         if os.path.exists(f"{os.getcwd()}/{username}.json") or os.path.exists(f'{username}.pickle'):
-            os.remove(f'{username}.pickle')
-            os.remove(f'{username}.json')
-            os.remove(f'student.json')
-            os.remove(f'clinix.json')
-            os.remove(f'combined_calendar_list.json')
-            os.remove(f'{os.getcwd()}/TempData/temp.txt')
+            if os.path.exists((f'{username}.pickle')):
+                os.remove(f'{username}.pickle')
+            if os.path.exists((f'{username}.json')):
+                os.remove(f'{username}.json')
+            if os.path.exists(f'student.json'):
+                os.remove(f'student.json')
+            if os.path.exists(f'clinix.json'):
+                os.remove(f'clinix.json')
+            if os.path.exists(f'combined_calendar_list.json'):
+                os.remove(f'combined_calendar_list.json')
+            if os.path.exists(f'{os.getcwd()}/TempData/temp.txt'):
+                os.remove(f'{os.getcwd()}/TempData/temp.txt')
             print(f'{username} successfully removed from system')
         else:
             print('No user found')
@@ -77,13 +83,6 @@ def password_validator(pword1, file1):
     """
     input_pass = password_hasher(pword1, pword1)
     return input_pass == file1
-
-
-def password_hasher(pword1, pword2):
-    """
-    This function will encrypt the password
-    """
-    return hashlib.sha512(pword1.encode('utf-8')).hexdigest()
 
 
 def get_user_info():

@@ -5,6 +5,7 @@ import importlib
 import time as t
 import json
 from datetime import datetime, timedelta, time
+calendar_sync = importlib.import_module('calendar_sync')
 cal_setup = importlib.import_module('cancel_volunteer.cal_setup')
 
 def get_date_and_time():
@@ -12,7 +13,7 @@ def get_date_and_time():
     This is to validate that the correct date and time being entered
     """
     while True:
-        date = input('Please enter a day you want to volunteer for? [YYYY-MM-DD] ')
+        date = input('Please enter the day you want to cancel slot? [YYYY-MM-DD] ')
         try:
             if date != datetime.strptime(date, "%Y-%m-%d").strftime('%Y-%m-%d'):
                 raise ValueError
@@ -22,7 +23,7 @@ def get_date_and_time():
             continue
 
     while True:
-        time = input('Please enter a time you want to volunteer for? [Hour:Minute:Second] ')
+        time = input('Please enter the time you want to cancel slot? [Hour:Minute:Second] ')
         try:
             if time != datetime.strptime(time, "%H:%M:%S").strftime('%H:%M:%S'):
                 raise ValueError
@@ -47,13 +48,17 @@ def cancel_volunteer():
         id_of_event = None
         events = []
         save_event_id = ''
+        is_slot_booked = False
         for item in reader['info']:
             if day == item['DATE'] and time == item['TIME'].split('-')[0].strip():
                 id_of_event = item['SUMMARY'].split('\n')[1].strip()
-    
+        
         for item in reader['info']:
             if id_of_event != None:
                 if id_of_event == item['SUMMARY'].split('\n')[1].strip():
+                    if len(item['ATTENDEES']) > 1:
+                        print("Cannot delete slot, someone's already booked.")
+                        return
                     save_event_id = item['ID']
                     events.append(item['ID'])
             else:
@@ -80,10 +85,11 @@ def cancel_volunteer():
             #deletes all 3 events usng an api request
             service = cal_setup.get_calendar_service()
             service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[0]).execute()
-            service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[1]).execute()
+            service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[1]).execute() 
             service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[2]).execute()
 
             print("Slot Deleted  (•‿•)")
+            calendar_sync.get_calendars()
 
         else:
             print("Unauthorized email/username, only signed in user can delete the event.")

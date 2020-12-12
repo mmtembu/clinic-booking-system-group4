@@ -6,6 +6,7 @@ import time as t
 import json
 from datetime import datetime, timedelta, time
 cal_setup = importlib.import_module('cancel_booking.cal_setup')
+calendar_sync = importlib.import_module('calendar_sync')
 
 def get_date_and_time():
     """
@@ -81,6 +82,7 @@ def cancel_booking():
                         'sendNotifications': True
                     },
                 ).execute()
+                calendar_sync.get_calendars()
             else:
                 print("Unauthorized email/username, only signed in user can delete the event.")
         else:
