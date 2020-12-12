@@ -48,13 +48,17 @@ def cancel_volunteer():
         id_of_event = None
         events = []
         save_event_id = ''
+        is_slot_booked = False
         for item in reader['info']:
             if day == item['DATE'] and time == item['TIME'].split('-')[0].strip():
                 id_of_event = item['SUMMARY'].split('\n')[1].strip()
-    
+        
         for item in reader['info']:
             if id_of_event != None:
                 if id_of_event == item['SUMMARY'].split('\n')[1].strip():
+                    if len(item['ATTENDEES']) > 1:
+                        print("Cannot delete slot, someone's already booked.")
+                        return
                     save_event_id = item['ID']
                     events.append(item['ID'])
             else:
@@ -81,7 +85,7 @@ def cancel_volunteer():
             #deletes all 3 events usng an api request
             service = cal_setup.get_calendar_service()
             service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[0]).execute()
-            service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[1]).execute()
+            service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[1]).execute() 
             service.events().delete(calendarId='codeclinix@gmail.com',eventId=events[2]).execute()
 
             print("Slot Deleted  (•‿•)")
