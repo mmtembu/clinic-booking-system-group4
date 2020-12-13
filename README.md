@@ -26,8 +26,8 @@ a booking, on the available slots
 ||- _Clinix help_|
 ||- _Clinix views calendar_|
 ||- _Clinix volunteer slots_|
-||- _Cancel volunteer slots_|
-||- _Make booking_|
+||- _Cancel volunteer slots_|
+||- _Make booking_|
 ||- _Cancel booking_|
 | 4. | Developer tools & Resources|
 
@@ -77,7 +77,7 @@ _Clinix volunteer slots_
 _Cancel volunteer slots_
 * **Follow prompts**
 * Brings up Clinix calendar
-* Asks for date and time
+* Asks for date and time
 * Will cancel all 3 slotspreviously created for a topic
 
 _Make booking_
