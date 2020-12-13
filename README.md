@@ -26,8 +26,13 @@ a booking, on the available slots
 ||- _Clinix help_|
 ||- _Clinix views calendar_|
 ||- _Clinix volunteer slots_|
+<<<<<<< HEAD
+||- _Cancel volunteer slots_|
+||- _Make booking_|
+=======
 ||- _Cancel volunteer slots_|
 ||- _Make booking_|
+>>>>>>> dbebf6cef159dca73b3263d53d79d10d57313d73
 ||- _Cancel booking_|
 | 4. | Developer tools & Resources|
 
@@ -51,7 +56,11 @@ In order to get started you will need to do the following on your linux machine
 _Clinix init_
 * **Follow prompts**
 * Username
+<<<<<<< HEAD
+* Campus
+=======
 * Campus
+>>>>>>> dbebf6cef159dca73b3263d53d79d10d57313d73
 * Password
 
 _Clinix login (access control for developers)_
@@ -63,13 +72,34 @@ _Clinix help_
 * the following topics are displayed once you run the help command
 
 _Clinix views calendar_
+<<<<<<< HEAD
+* **Follow prompts**
+* Personal calendar 
+=======
 * **Follow prompts**
 * Personal calendar
+>>>>>>> dbebf6cef159dca73b3263d53d79d10d57313d73
 * Code Clinix calendar 
 
 _Clinix volunteer slots_
 * **Follow prompts**
 * Date (Year/month/day)
+<<<<<<< HEAD
+* Time (hour:minutes:seconds)
+* Topic choice
+* Create 3× 30 minutes slots
+
+_Cancel volunteer slots_
+* **Follow prompts**
+* Brings up Clinix calendar
+* Asks for date and time
+* Will cancel all 3 slotspreviously created for a topic
+
+_Make booking_
+* **follow prompts**
+* Date (Year/month/day)
+* Time (hour:minutes:seconds)
+=======
 * Time (hour:minutes:seconds)
 * Topic choice
 * Create 3× 30 minutes slots
@@ -84,11 +114,16 @@ _Make booking_
 * **follow prompts**
 * Date (Year/month/day)
 * Time (hour:minutes:seconds)
+>>>>>>> dbebf6cef159dca73b3263d53d79d10d57313d73
 * Choose topic to attend 
 
 _Cancel booking_
 * **follow prompts**
+<<<<<<< HEAD
+* Date (Year/month/day)
+=======
 * Date (Year/month/day)
+>>>>>>> dbebf6cef159dca73b3263d53d79d10d57313d73
 * Time (hour:minutes:seconds)
 
 ## Developer tools & Resources
