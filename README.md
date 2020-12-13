@@ -85,11 +85,10 @@ _Cancel volunteer slots_
 * Asks for date and time
 * Will cancel all 3 slotspreviously created for a topic
 
-_Make booking_
+_Make booking_
 * **follow prompts**
-* Date (Year/month/day)
-* Time (hour:minutes:seconds)
-=======
+* Date (Year/month/day)
+* Time (hour:minutes:seconds)
 * Time (hour:minutes:seconds)
 * Topic choice
 * Create 3× 30 minutes slots
