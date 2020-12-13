@@ -31,17 +31,6 @@ class TestInterface(unittest.TestCase):
         self.assertEqual(interface.password_hasher(pword1, pword2), output)   
 
 
-    # def test_password_validator(self):
-    #     pword1 = "1234"
-    #     pword2 = "1234"
-        
-    #     with open("tx.json", "r") as person:
-    #         person_info = json.loads(person.read())
-    #         file1  = person_info["password"]
-
-    #     self.assertTrue(interface.password_validator(pword1, file1))
-
-
     def test_create_temp_data(self):
         if os.path.exists("temp.txt"):
             self.assertEqual(interface.create_temp_data("tx"),"""Welcome back tx""")
