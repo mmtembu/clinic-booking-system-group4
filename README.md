@@ -51,7 +51,7 @@ In order to get started you will need to do the following on your linux machine
 _Clinix init_
 * **Follow prompts**
 * Username
-* Campus
+* Campus
 * Password
 
 _Clinix login (access control for developers)_
