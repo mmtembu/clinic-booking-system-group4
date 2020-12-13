@@ -28,8 +28,6 @@ a booking, on the available slots
 ||- _Clinix volunteer slots_|
 ||- _Cancel volunteer slots_|
 ||- _Make booking_|
-||- _Cancel volunteer slots_|
-||- _Make booking_|
 ||- _Cancel booking_|
 | 4. | Developer tools & Resources|
 
@@ -54,7 +52,6 @@ _Clinix init_
 * **Follow prompts**
 * Username
 * Campus
-* Campus
 * Password
 
 _Clinix login (access control for developers)_
@@ -68,36 +65,20 @@ _Clinix help_
 _Clinix views calendar_
 * **Follow prompts**
 * Personal calendar
-* **Follow prompts**
-* Personal calendar
 * Code Clinix calendar 
 
 _Clinix volunteer slots_
 * **Follow prompts**
 * Date (Year/month/day)
 * Time (hour:minutes:seconds)
-* Topic choice
-* Create 3× 30 minutes slots
+* Pick a Topic for the event
+* 3× 30 minutes slots will be created
 
 _Cancel volunteer slots_
 * **Follow prompts**
 * Brings up Clinix calendar
 * Asks for date and time
-* Will cancel all 3 slotspreviously created for a topic
-
-_Make booking_
-* **follow prompts**
-* Date (Year/month/day)
-* Time (hour:minutes:seconds)
-* Time (hour:minutes:seconds)
-* Topic choice
-* Create 3× 30 minutes slots
-
-_Cancel volunteer slots_
-* **Follow prompts**
-* Brings up Clinix calendar
-* Asks for date and time
-* Will cancel all 3 slotspreviously created for a topic
+* Will cancel all 3 slots previously created for a topic
 
 _Make booking_
 * **follow prompts**
@@ -108,14 +89,13 @@ _Make booking_
 _Cancel booking_
 * **follow prompts**
 * Date (Year/month/day)
-* Date (Year/month/day)
 * Time (hour:minutes:seconds)
 
 ## Developer tools & Resources
 
 * Python3
 * Linux Shell Script
-* Mico board
+* Miro board
 * git --version control
 * mark down
 
