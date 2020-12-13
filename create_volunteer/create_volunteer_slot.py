@@ -134,15 +134,10 @@ def create_col_dict():
 
 def convert_to_proper_time(day, time):
     return (int(day.split('-')[0]), int(day.split('-')[1]), int(day.split('-')[2]), \
-<<<<<<< HEAD
         int(time.split(':')[0]), int(time.split(':')[1]))
 
-
-def create_volunteer(username):
-=======
-        int(time.split(':')[0]), int(time.split(':')[1]))    
 def create_volunteer():
->>>>>>> dbebf6cef159dca73b3263d53d79d10d57313d73
+
     """
     Creates 3 volunteer slots (which are in 30 minute intervals) for the clinician 
     """
