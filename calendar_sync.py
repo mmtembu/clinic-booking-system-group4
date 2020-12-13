@@ -12,6 +12,7 @@ import hashlib
 import uuid
 import difflib
 import json
+import importlib
 from collections import defaultdict
 # from slot_package import filter_slots
 from datetime import datetime
@@ -21,7 +22,7 @@ from google.auth.transport.requests import Request
 from interface import create_profile,  get_user_info
 from create_volunteer.create_volunteer_slot import create_volunteer
 from make_booking.make_booking import create_booking
-from cancel_volunteer.cancel_volunteer_slot import cancel_volunteer
+cancel_volunteer = importlib.import_module('cancel_volunteer.cancel_volunteer_slot')
 from cancel_booking.cancel_booking import cancel_booking
 
 
@@ -416,7 +417,7 @@ def cancel_slot(agent):
     if os.path.exists(f'{os.getcwd()}/{agent}.json'):
         with open(f'{os.getcwd()}/{agent}.json', 'r') as events_list:
             read_data('clinix')
-            cancel_volunteer()
+            cancel_volunteer.cancel_volunteer()
     else:
         print('User not logged in')
 

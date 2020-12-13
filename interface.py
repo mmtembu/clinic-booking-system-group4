@@ -118,4 +118,4 @@ def create_temp_data(username):
             print("Welcome back,", temp_file.read())
     else:
         with open(os.getcwd()+'/TempData/temp.txt', 'w') as temp_file:
-            temp_file.write(username)
+            return temp_file.write(username)
