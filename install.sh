@@ -37,7 +37,8 @@ else
 fi
 
 #Moves the files to the relevant directories
-if cp -f ~/Downloads/quickstart/* ~/.config/clinix/; then #change from 'cp' -> 'mv'
+pwd=$(pwd)
+if cp -rf $(pwd)/* ~/.config/clinix/; then #change from 'cp' -> 'mv'
 
 	echo 'Relevant files have been moved.'
 	echo 'source ~/.config/clinix/clinix.sh' >> ~/.zshrc

@@ -33,9 +33,6 @@ YELLOW = "\033[1;33m%s\033"  # Yellow
 BLUE = "\033[1;34m%s\033"  # Blue
 NEUTRAL = "\033[0m"  # Reset
 
-col = defaultdict(list)
-
-username = ""
 
 
 def fetch_calendar_events(events, agent):
@@ -73,7 +70,7 @@ def fetch_calendar_events(events, agent):
                     'DESCRIPTION':event['summary']
                 })
         #|-----------------JSON-----------------|
-        with open(f'{agent}.json', 'w') as calendar_json:#opens a json file and writes to it
+        with open(f'{os.getcwd()}/{agent}.json', 'w') as calendar_json:#opens a json file and writes to it
             json.dump(data, calendar_json)
     else:
         print(f'No updates were made to the {agent} calendar.')
@@ -87,7 +84,7 @@ def is_calendar_current_data_old(events, agent):
         agent ([string]): this is either the student or the clinix
     """
 
-    if os.path.exists(f'{agent}.json'):
+    if os.path.exists(f'{os.getcwd()}/{agent}.json'):
         file_in_system = from_csv_to_dict(agent)
         data_from_api = [{
             "Date": event['start'].get('dateTime', event['start'].get('date')).split('T')[0],
@@ -107,7 +104,7 @@ def from_csv_to_dict(agent):
     This function converts contents from the csv file to a list
     """
     list = []
-    with open(f'{agent}.json', 'r') as json_file:
+    with open(f'{os.getcwd()}/{agent}.json', 'r') as json_file:
         data = json.load(json_file)
 
         if agent == "student":
@@ -181,7 +178,7 @@ def read_data(agent):
     """
     Reads and displays the data of the google calendar in the form of a table
     """
-    if os.path.exists(f'{agent}.json'):
+    if os.path.exists(f'{os.getcwd()}/{agent}.json'):
         print(f'Getting the upcoming for the next 7 days [{agent}]\n')
         base_day = datetime.today()
         date_list = [(base_day + timedelta(days=x, minutes=60)).strftime(r'%Y %d %BD%A')for x in range(7)]
@@ -315,7 +312,7 @@ def view_all_slots(day, list_of_slots):
                             "ID": item['ID'],
                             "Attendees": item['Attendees'],
                             "Description": item['Description']}
-                            )                
+                            )
     for i in slots:
         for j in list_of_times:
             if i["Time"].split('-')[0].strip() == j['Time'] and i["Date"] == j['Date']:
@@ -358,7 +355,7 @@ def get_credentials(secret_json):
     time.
     """
 
-    global username
+    # global username
     username = ''
     if os.path.exists(os.getcwd()+'/TempData/temp.txt'):
         with open(os.getcwd()+'/TempData/temp.txt') as username_file:
@@ -370,8 +367,8 @@ def get_credentials(secret_json):
 
     creds = None
 
-    if os.path.exists(f'{username}.pickle'):
-        with open(f'{username}.pickle', 'rb') as token:
+    if os.path.exists(f'{os.getcwd()}/{username}.pickle'):
+        with open(f'{os.getcwd()}/{username}.pickle', 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -383,7 +380,7 @@ def get_credentials(secret_json):
             creds = flow.run_local_server(port=0)
 
         # Save the credentials for the next run
-        with open(f'{username}.pickle', 'wb') as token:
+        with open(f'{os.getcwd()}/{username}.pickle', 'wb') as token:
             pickle.dump(creds, token)
     return creds
 
@@ -393,7 +390,7 @@ def get_calendars():
     This funtion gets both the calendars
     """
 
-    secret_json = os.getcwd()+'/credentials.json'
+    secret_json = os.getcwd()+'/secret_json.json'
     clinix = 'codeclinix@gmail.com'
     user_calendar = "primary"
     service = build('calendar', 'v3', credentials=get_credentials(secret_json))
@@ -405,10 +402,10 @@ def volunteer_slot(agent):
     """
     Reads and prints clinix calendar info, also calls create volunteer slot functionality
     """
-    if os.path.exists(f'{agent}.json'):
-        with open(f'{agent}.json', 'r') as events_list:
+    if os.path.exists(f'{os.getcwd()}/{agent}.json'):
+        with open(f'{os.getcwd()}/{agent}.json', 'r') as events_list:
             read_data('clinix')
-            create_volunteer(username)
+            create_volunteer()
     else:
         print('User not logged in')
 
@@ -416,8 +413,8 @@ def cancel_slot(agent):
     """
     Reads and prints clinix calendar info, also calls cancel slot functionality
     """
-    if os.path.exists(f'{agent}.json'):
-        with open(f'{agent}.json', 'r') as events_list:
+    if os.path.exists(f'{os.getcwd()}/{agent}.json'):
+        with open(f'{os.getcwd()}/{agent}.json', 'r') as events_list:
             read_data('clinix')
             cancel_volunteer()
     else:
@@ -428,8 +425,8 @@ def book_slot(agent):
     """
     Reads and prints clinix calendar info, also calls create booking functionality
     """
-    if os.path.exists(f'{agent}.json'):
-        with open(f'{agent}.json', 'r') as events_list:
+    if os.path.exists(f'{os.getcwd()}/{agent}.json'):
+        with open(f'{os.getcwd()}/{agent}.json', 'r') as events_list:
             read_data('clinix')
             create_booking()
     else:
@@ -439,8 +436,8 @@ def cancel_book(agent):
     """
     Reads and prints clinix calendar info, also calls cancel booking functionality
     """
-    if os.path.exists(f'{agent}.json'):
-        with open(f'{agent}.json', 'r') as events_list:
+    if os.path.exists(f'{os.getcwd()}/{agent}.json'):
+        with open(f'{os.getcwd()}/{agent}.json', 'r') as events_list:
             read_data('clinix')
             cancel_booking()
     else:
@@ -451,9 +448,9 @@ def create_combined_csv(student_events, clinix_events):
     """
     Creates a combined csv file which stores the data of the users personal calendar and the clinix calendar
     """
-    if os.path.exists(f'{student_events}.json'):
+    if os.path.exists(f'{os.getcwd()}/{student_events}.json'):
         list_of_slots = []
-        with open(f'{student_events}.json') as file:
+        with open(f'{os.getcwd()}/{student_events}.json') as file:
             student_json_reader = json.load(file)
 
             list_of_slots = [{"Date": row['DATE'],
@@ -461,7 +458,7 @@ def create_combined_csv(student_events, clinix_events):
                               "Description": row['DESCRIPTION']}
                             for row in student_json_reader['info']]
 
-        with open(f'{clinix_events}.json') as file:
+        with open(f'{os.getcwd()}/{clinix_events}.json') as file:
             clinix_json_reader = json.load(file)
 
             list_of_slots_clinix = [{"Date": row['DATE'],
@@ -498,5 +495,5 @@ def create_combined_csv(student_events, clinix_events):
                     "ID":item['ID'],
                     "Attendees":item['Attendees'],
                 })
-        with open('combined_calendar_list.json', 'w') as calendar_outfile:
+        with open(f'{os.getcwd()}/combined_calendar_list.json', 'w') as calendar_outfile:
             json.dump(data, calendar_outfile)

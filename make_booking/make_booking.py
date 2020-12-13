@@ -61,13 +61,13 @@ def create_booking():
     """
 
     username = ''
-    with open(os.getcwd()+'/TempData/temp.txt') as temp_file:
+    with open(f'{os.getcwd()}/TempData/temp.txt') as temp_file:
         username = temp_file.readline()
     username = username.split('\n')[0]
     service = get_calendar_service()
 
     data_api_time = []
-    with open(f'clinix.json') as clinix_calendar:
+    with open(f'{os.getcwd()}/clinix.json') as clinix_calendar:
         clinix_calendar_reader = json.load(clinix_calendar)
         for item in clinix_calendar_reader['info']:
             event_id = item['ID']

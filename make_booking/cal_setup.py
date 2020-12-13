@@ -13,7 +13,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar.events', 'https://www.google
 # https://www.googleapis.com/auth/calendar
 # https://www.googleapis.com/auth/calendar.events.readonly
 # https://www.googleapis.com/auth/calendar.events
-CREDENTIALS_FILE = '../secret_json.json'
+CREDENTIALS_FILE = os.getcwd()+'/secret_json.json'
 
 
 def get_calendar_service():
@@ -21,8 +21,12 @@ def get_calendar_service():
     # The file token.pickle stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
+    username = ''
+    with open(f'{os.getcwd()}/TempData/temp.txt') as username_file:
+        username = username_file.read()
+        
+    if os.path.exists(f'{os.getcwd()}/{username}.pickle'):
+        with open(f'{os.getcwd()}/{username}.pickle', 'rb') as token:
             creds = pickle.load(token)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
@@ -34,8 +38,8 @@ def get_calendar_service():
             creds = flow.run_local_server(port=0)
 
         # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
+        # with open('token.pickle', 'wb') as token:
+        #     pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
     return service

@@ -43,7 +43,7 @@ def cancel_volunteer():
     service = cal_setup.get_calendar_service()
     day, time = get_date_and_time()
 
-    with open('clinix.json') as clinix_calendar_reader:
+    with open(f'{os.getcwd()}/clinix.json') as clinix_calendar_reader:
         reader = json.load(clinix_calendar_reader)
         id_of_event = None
         events = []

@@ -11,25 +11,6 @@ import make_booking.make_booking as make_booking
 import cancel_booking.cancel_booking as cancel_booking
 
 
-# data = {}
-# data['info'] = []
-
-# data['info'].append({
-#     'species' : 'human',
-#     'name' : 'mangaliso',
-#     'address' : '839 bluegum street',
-#     'gender' : 'male'
-# })
-
-# data['info'].append({
-#     'species' : 'moncalamari',
-#     'name' : 'stowza',
-#     'address' : '45 loveday street',
-#     'gender' : 'male'
-# })
-
-# with open(os.getcwd()+'/info.json', 'w') as outfile:
-#     json.dump(data, outfile)
 
 class TestCaseVolunteer(unittest.TestCase):
 

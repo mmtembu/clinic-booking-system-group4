@@ -34,7 +34,7 @@ def create_profile():
             pword1 = stdiomask.getpass("Please create a password: ")
             pword2 = stdiomask.getpass("Please confirm password: ")
 
-        with open(f"{username}.json", "w") as person:
+        with open(f"{os.getcwd()}/{username}.json", "w") as person:
             json.dump({"username": username, "email": email, "campus": campus,
                        "password": password_hasher(pword1, pword2)}, person)
             print("Now you can login")
@@ -49,17 +49,17 @@ def logout():
 
     try:
         username = input("Please enter Username you want to logout: ")
-        if os.path.exists(f"{os.getcwd()}/{username}.json") or os.path.exists(f'{username}.pickle'):
-            if os.path.exists((f'{username}.pickle')):
-                os.remove(f'{username}.pickle')
-            if os.path.exists((f'{username}.json')):
-                os.remove(f'{username}.json')
-            if os.path.exists(f'student.json'):
-                os.remove(f'student.json')
-            if os.path.exists(f'clinix.json'):
-                os.remove(f'clinix.json')
-            if os.path.exists(f'combined_calendar_list.json'):
-                os.remove(f'combined_calendar_list.json')
+        if os.path.exists(f"{os.getcwd()}/{username}.json") or os.path.exists(f'{os.getcwd()}/{username}.pickle'):
+            if os.path.exists(f'{os.getcwd()}/{username}.pickle'):
+                os.remove(f'{os.getcwd()}/{username}.pickle')
+            if os.path.exists(f'{os.getcwd()}/{username}.json'):
+                os.remove(f'{os.getcwd()}/{username}.json')
+            if os.path.exists(f'{os.getcwd()}/student.json'):
+                os.remove(f'{os.getcwd()}/student.json')
+            if os.path.exists(f'{os.getcwd()}/clinix.json'):
+                os.remove(f'{os.getcwd()}/clinix.json')
+            if os.path.exists(f'{os.getcwd()}/combined_calendar_list.json'):
+                os.remove(f'{os.getcwd()}/combined_calendar_list.json')
             if os.path.exists(f'{os.getcwd()}/TempData/temp.txt'):
                 os.remove(f'{os.getcwd()}/TempData/temp.txt')
             print(f'{username} successfully removed from system')
@@ -91,13 +91,13 @@ def get_user_info():
     """
     global is_logged_in
     username = input("Please enter student username: ")
-    if os.path.exists(f"{username}.json"):
-        with open(f"{username}.json", "r") as person:
+    if os.path.exists(f"{os.getcwd()}/{username}.json"):
+        with open(f"{os.getcwd()}/{username}.json", "r") as person:
             person_info = json.loads(person.read())
             if password_validator(stdiomask.getpass("Please enter password to login: "), person_info["password"]):
                 is_logged_in = True
                 create_temp_data(username)
-                if os.path.exists(f'{username}.pickle'):
+                if os.path.exists(f'{os.getcwd()}/{username}.pickle'):
                     return True, person_info
                 else:
                     return True, person_info

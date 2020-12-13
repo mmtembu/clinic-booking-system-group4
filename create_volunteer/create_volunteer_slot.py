@@ -82,7 +82,7 @@ def is_slot_booked(day, time):
 
     calendar_sync.get_calendars()
     #|-------------Double Booking Check-------------|
-    with open('clinix.json') as clinix_reader:
+    with open(f'{os.getcwd()}/clinix.json') as clinix_reader:
         reader = json.load(clinix_reader)
         
         # save_event_id = None
@@ -134,7 +134,7 @@ def create_col_dict():
 def convert_to_proper_time(day, time):
     return (int(day.split('-')[0]), int(day.split('-')[1]), int(day.split('-')[2]), \
         int(time.split(':')[0]), int(time.split(':')[1]))    
-def create_volunteer(username):
+def create_volunteer():
     """
     Creates 3 volunteer slots (which are in 30 minute intervals) for the clinician 
     """

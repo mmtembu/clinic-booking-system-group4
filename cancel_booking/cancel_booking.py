@@ -41,12 +41,12 @@ def cancel_booking():
     day, time = get_date_and_time()
 
     username = ''
-    with open('TempData/temp.txt', 'r') as username_in_file:
+    with open(f'{os.getcwd()}/TempData/temp.txt', 'r') as username_in_file:
         
         # service = cal_setup.get_calendar_service()
         username = username_in_file.read()
     
-    with open('clinix.json') as clinix_reader:
+    with open(f'{os.getcwd()}/clinix.json') as clinix_reader:
         events = []
         reader = json.load(clinix_reader)
         
