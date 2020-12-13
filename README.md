@@ -63,32 +63,32 @@ _Clinix help_
 * the following topics are displayed once you run the help command
 
 _Clinix views calendar_
-* **Follow prompts**
-* Personal calendar 
+* **Follow prompts**
+* Personal calendar
 * Code Clinix calendar 
 
 _Clinix volunteer slots_
 * **Follow prompts**
 * Date (Year/month/day)
-* Time (hour:minutes:seconds)
-* Topic choice
+* Time (hour:minutes:seconds)
+* Topic choice
 * Create 3× 30 minutes slots
 
-_Cancel volunteer slots_
-* **Follow prompts**
+_Cancel volunteer slots_
+* **Follow prompts**
 * Brings up Clinix calendar
-* Asks for date and time
+* Asks for date and time
 * Will cancel all 3 slotspreviously created for a topic
 
-_Make booking_
+_Make booking_
 * **follow prompts**
-* Date (Year/month/day)
-* Time (hour:minutes:seconds)
+* Date (Year/month/day)
+* Time (hour:minutes:seconds)
 * Choose topic to attend 
 
 _Cancel booking_
 * **follow prompts**
-* Date (Year/month/day)
+* Date (Year/month/day)
 * Time (hour:minutes:seconds)
 
 ## Developer tools & Resources
