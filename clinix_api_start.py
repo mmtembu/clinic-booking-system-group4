@@ -33,8 +33,6 @@ MAKE_BOOKING    -   makes the booking for the patient
 CREATE_SLOT     -   creates a set of 3 volunteer slots for the clinician
 CANCEL_BOOKING  -   cancels booking for the patient
 CANCEL_SLOT     -   cancels volunteer slots for the clinician
-
-PS. Please login again to refresh the calendar
 """)
 
 
